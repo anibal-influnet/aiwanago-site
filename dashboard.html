@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aiwanago — Dashboard de Higiene Inteligente</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,700;0,900;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── OFFICIAL AIWANAGO BRAND PALETTE ── */
+  --verde: #12b796;          /* Pantone 339 C — primary brand green */
+  --verde-bright: #1dd6af;   /* lighter tint for hover/glow */
+  --verde-dim: #0a8f74;      /* darker shade */
+  --verde-glow: rgba(18,183,150,0.13);
+  --verde-glow-strong: rgba(18,183,150,0.28);
+  --celeste: #6dccdf;        /* Pantone 310 C — accent sky blue */
+  --celeste-dim: rgba(109,204,223,0.15);
+  --celeste-glow: rgba(109,204,223,0.25);
+  --negro: #000000;          /* Pantone Black 6 C */
+
+  /* ── DARK UI SURFACES (built on negro) ── */
+  --bg: #080B0A;
+  --bg2: #0C100F;
+  --bg3: #111815;
+  --surface: #182220;
+  --surface2: #1E2A28;
+
+  /* ── BORDERS ── */
+  --border: rgba(18,183,150,0.16);
+  --border-soft: rgba(255,255,255,0.055);
+  --border-celeste: rgba(109,204,223,0.2);
+
+  /* ── TEXT ── */
+  --text: #E2EEE9;
+  --text-dim: #7AA898;
+  --text-faint: #3E6059;
+
+  /* ── SEMANTIC COLORS ── */
+  --amber: #F5A623;
+  --amber-dim: rgba(245,166,35,0.14);
+  --red: #E85D5D;
+  --red-dim: rgba(232,93,93,0.11);
+  --green: #22C55E;
+  --green-dim: rgba(34,197,94,0.11);
+  --gold: #D4A843;
+  --silver: #9EADB8;
+  --bronze: #C4845A;
+  --wa-green: #25D366;
+  --wa-bg: #080B09;
+  --wa-in: #182118;
+  --wa-out: #004D3E;
+  --purple: #7C6AF5;
+  --purple-dim: rgba(124,106,245,0.14);
+
+  /* ── TYPOGRAPHY — RALEWAY (brand) + DM Mono (data) ── */
+  --font-brand: 'Raleway', sans-serif;
+  --font-data: 'DM Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--font-brand);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-weight:300;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(18,183,150,0.025)1px,transparent 1px),linear-gradient(90deg,rgba(18,183,150,0.025)1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:224px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;}
+.logo-area{padding:24px 22px 18px;border-bottom:1px solid var(--border);}
+.logo{font-family:var(--font-brand);font-weight:900;font-size:20px;color:var(--verde-bright);letter-spacing:-0.5px;}
+.logo span{color:var(--text-dim);font-weight:300;font-size:11px;display:block;letter-spacing:1px;margin-top:2px;font-family:var(--font-data);}
+.nav{padding:14px 10px;flex:1;overflow-y:auto;}
+.nav-label{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1.5px;text-transform:uppercase;padding:8px 12px 5px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:7px;cursor:pointer;color:var(--text-dim);font-size:13px;font-family:var(--font-brand);font-weight:400;transition:all 0.15s;margin-bottom:2px;user-select:none;}
+.nav-item:hover{background:var(--surface);color:var(--text);}
+.nav-item.active{background:var(--verde-glow);color:var(--verde-bright);}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-family:var(--font-data);padding:2px 6px;border-radius:10px;}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+.loc-selector{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 11px;}
+.loc-lbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.loc-selector select{background:none;border:none;color:var(--text);font-family:var(--font-brand);font-size:12px;width:100%;cursor:pointer;outline:none;appearance:none;}
+.lang-row{display:flex;gap:6px;}
+.lang-btn{flex:1;padding:6px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font-family:var(--font-data);font-size:10px;border-radius:6px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.lang-btn.active{background:var(--verde-glow);border-color:var(--verde);color:var(--verde-bright);}
+.mode-badge{display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:8px;font-family:var(--font-data);font-size:10px;border:1px solid;cursor:pointer;transition:all 0.2s;justify-content:center;}
+.mode-badge.demo{background:var(--amber-dim);border-color:rgba(245,166,35,0.3);color:var(--amber);}
+.mode-badge.live{background:var(--green-dim);border-color:rgba(76,175,130,0.3);color:var(--green);animation:liveGlow 2s infinite;}
+@keyframes liveGlow{0%,100%{box-shadow:0 0 0 0 rgba(18,183,150,0)}50%{box-shadow:0 0 8px rgba(18,183,150,0.2)}}
+.mode-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* MAIN */
+.main{margin-left:224px;min-height:100vh;position:relative;z-index:1;}
+.topbar{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-soft);background:rgba(10,15,14,0.92);backdrop-filter:blur(10px);position:sticky;top:0;z-index:50;}
+.page-title{font-family:var(--font-brand);font-weight:600;font-size:16px;color:var(--text);}
+.page-title span{color:var(--text-faint);font-weight:400;font-size:12px;margin-left:8px;font-family:var(--font-data);}
+.topbar-right{display:flex;align-items:center;gap:9px;}
+.clk{font-family:var(--font-data);font-size:12px;color:var(--text-dim);background:var(--surface);padding:5px 10px;border-radius:6px;border:1px solid var(--border);}
+.live-dot{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-family:var(--font-data);}
+.live-dot::before{content:'';width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(18,183,150,0.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(18,183,150,0)}}
+.tbtn{font-family:var(--font-brand);font-weight:600;font-size:11px;padding:6px 12px;border-radius:7px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;border:1px solid;white-space:nowrap;}
+.tbtn-teal{background:var(--verde-glow);border-color:var(--verde);color:var(--verde-bright);}
+.tbtn-teal:hover{background:var(--verde-glow-strong);}
+.tbtn-wa{background:rgba(37,211,102,0.1);border-color:rgba(37,211,102,0.3);color:var(--wa-green);}
+.tbtn-wa:hover{background:rgba(37,211,102,0.18);}
+.tbtn-cfg{background:var(--purple-dim);border-color:rgba(124,106,245,0.3);color:var(--purple);}
+.tbtn-cfg:hover{background:rgba(124,106,245,0.25);}
+.last-updated{font-family:var(--font-data);font-size:10px;color:var(--text-faint);padding:4px 10px;border-radius:5px;background:var(--surface);border:1px solid var(--border-soft);}
+.last-updated.fresh{color:var(--green);border-color:rgba(76,175,130,0.2);}
+.last-updated.stale{color:var(--amber);border-color:rgba(245,166,35,0.2);}
+
+/* PAGES */
+.page{display:none;padding:20px 24px;animation:fadeUp 0.3s ease both;}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* SCORE + KPIs */
+.score-hero{display:grid;grid-template-columns:245px 1fr;gap:14px;margin-bottom:16px;}
+.score-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;}
+.score-card::before{content:'';position:absolute;top:-40px;left:-40px;width:150px;height:150px;background:radial-gradient(circle,var(--verde-glow-strong),transparent 70%);pointer-events:none;}
+.score-ring{position:relative;width:120px;height:120px;margin-bottom:11px;}
+.score-ring svg{transform:rotate(-90deg);}
+.ring-track{fill:none;stroke:var(--surface);stroke-width:8;}
+.ring-prog{fill:none;stroke:var(--verde-bright);stroke-width:8;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:60;filter:drop-shadow(0 0 8px var(--verde));transition:stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1),stroke 0.5s;}
+.score-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.score-num .n{font-family:var(--font-brand);font-size:34px;font-weight:800;color:var(--verde-bright);line-height:1;transition:color 0.5s;}
+.score-num .s{font-family:var(--font-data);font-size:9px;color:var(--text-faint);}
+.tier-badge{font-family:var(--font-brand);font-weight:700;font-size:11px;padding:4px 12px;border-radius:20px;margin-bottom:6px;}
+.tier-badge.gold{background:rgba(212,168,67,0.15);color:var(--gold);border:1px solid rgba(212,168,67,0.3);}
+.tier-badge.silver{background:rgba(158,173,184,0.15);color:var(--silver);border:1px solid rgba(158,173,184,0.3);}
+.tier-badge.bronze{background:rgba(196,132,90,0.15);color:var(--bronze);border:1px solid rgba(196,132,90,0.3);}
+.score-meta{font-size:11px;color:var(--text-faint);font-family:var(--font-data);text-align:center;margin-bottom:8px;}
+.cert-box{width:100%;background:var(--surface);border-radius:9px;border:1px solid rgba(212,168,67,0.2);padding:10px;text-align:center;margin-top:6px;}
+.cert-box .ci{font-size:22px;}.cert-box .cn{font-family:var(--font-brand);font-weight:700;font-size:12px;color:var(--gold);}
+.cert-box .cs{font-family:var(--font-data);font-size:9px;color:var(--text-faint);}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-content:start;}
+.kpi{background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:13px 15px;transition:border-color 0.2s;}
+.kpi:hover{border-color:var(--border);}
+.kpi-lbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--verde);flex-shrink:0;}
+.dot.r{background:var(--red);}.dot.a{background:var(--amber);}.dot.g{background:var(--green);}
+.kpi-val{font-family:var(--font-brand);font-size:22px;font-weight:700;color:var(--text);line-height:1;margin-bottom:3px;transition:color 0.5s;}
+.kpi-val.ok{color:var(--green);}.kpi-val.warn{color:var(--amber);}.kpi-val.bad{color:var(--red);}
+.kpi-sub{font-size:11px;color:var(--text-faint);}
+.sec-lbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:2px;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:10px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border-soft);}
+
+/* SENSORS */
+.sensor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.sc{background:var(--bg3);border:1px solid var(--border-soft);border-radius:10px;padding:13px 15px;position:relative;overflow:hidden;transition:border-color 0.3s;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--verde);transition:background 0.5s;}
+.sc.critical{border-color:rgba(232,93,93,0.4);}.sc.critical::before{background:var(--red);}
+.sc.warn{border-color:rgba(245,166,35,0.3);}.sc.warn::before{background:var(--amber);}
+.sc.ok::before{background:var(--verde);}
+.sc-name{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between;}
+.sc-val{font-family:var(--font-brand);font-size:24px;font-weight:700;line-height:1;margin-bottom:3px;transition:color 0.5s;}
+.sc-val .u{font-size:11px;font-weight:400;color:var(--text-dim);}
+.sc-status{font-size:11px;color:var(--text-faint);margin-bottom:8px;}
+.sbar{height:3px;background:var(--surface);border-radius:2px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:2px;transition:width 1s ease,background 0.5s;}
+.sbar-fill.ok{background:var(--verde);}.sbar-fill.warn{background:var(--amber);}.sbar-fill.bad{background:var(--red);}
+
+/* CHART GRID */
+.main-grid{display:grid;grid-template-columns:1fr 295px;gap:14px;margin-bottom:16px;}
+.card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:14px;padding:18px;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--text);}
+.card-sub{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-top:2px;}
+.pill{font-family:var(--font-data);font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
+.pill.active,.pill:hover{border-color:var(--verde);color:var(--verde-bright);background:var(--verde-glow);}
+.chart-area{height:155px;display:flex;align-items:flex-end;gap:4px;}
+.bg{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;}
+.bg:hover .b{filter:brightness(1.3);}
+.b{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--verde-dim),var(--verde));transition:height 0.8s cubic-bezier(0.4,0,0.2,1);}
+.b.al{background:linear-gradient(to top,#a33,var(--red));}.b.wn{background:linear-gradient(to top,#a07010,var(--amber));}
+.bl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);}
+.alerts-panel{background:var(--bg3);border:1px solid var(--border-soft);border-radius:14px;padding:18px;display:flex;flex-direction:column;}
+.ai{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border-soft);cursor:pointer;transition:all 0.15s;}
+.ai:last-child{border-bottom:none;}.ai:hover{opacity:0.8;}
+.ai-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ai-icon.red{background:var(--red-dim);}.ai-icon.amber{background:var(--amber-dim);}.ai-icon.green{background:var(--green-dim);}
+.ai-body{flex:1;min-width:0;}
+.ai-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.ai-meta{font-family:var(--font-data);font-size:10px;color:var(--text-faint);}
+.ai-time{font-family:var(--font-data);font-size:9px;color:var(--text-faint);flex-shrink:0;}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ltbl{width:100%;border-collapse:collapse;}
+.ltbl th{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;text-align:left;padding:0 9px 7px;border-bottom:1px solid var(--border-soft);}
+.ltbl td{padding:8px 9px;font-size:12px;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,0.03);}
+.ltbl tr:hover td{background:var(--surface);}
+.ls{display:inline-flex;align-items:center;gap:3px;font-family:var(--font-data);font-size:10px;padding:3px 6px;border-radius:4px;}
+.ls.done{background:var(--green-dim);color:var(--green);}.ls.pending{background:var(--amber-dim);color:var(--amber);}
+
+/* WA PANEL */
+.wa-panel{position:fixed;right:0;top:0;bottom:0;width:345px;background:var(--wa-bg);border-left:1px solid rgba(37,211,102,0.15);z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);}
+.wa-panel.open{transform:translateX(0);}
+.wa-hdr{background:#1F2C34;padding:13px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0;}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:var(--verde-dim);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.wa-name{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--text);}
+.wa-status{font-size:11px;color:var(--wa-green);font-family:var(--font-data);}
+.wa-close{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:17px;margin-left:auto;}
+.wa-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.05);flex-shrink:0;}
+.wa-tab{flex:1;padding:9px;text-align:center;font-family:var(--font-data);font-size:10px;color:var(--text-faint);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.wa-tab.active{color:var(--wa-green);border-bottom-color:var(--wa-green);}
+.wa-msgs{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:7px;}
+.wm{max-width:85%;padding:8px 11px 5px;border-radius:9px;}
+.wm.in{background:var(--wa-in);align-self:flex-start;border-radius:0 9px 9px 9px;}
+.wm.out{background:var(--wa-out);align-self:flex-end;border-radius:9px 0 9px 9px;}
+.wm.sys{background:rgba(37,211,102,0.07);border:1px solid rgba(37,211,102,0.15);align-self:center;border-radius:9px;text-align:center;max-width:95%;}
+.wm-text{font-size:13px;color:var(--text);line-height:1.5;white-space:pre-wrap;}
+.wm-time{font-family:var(--font-data);font-size:10px;color:var(--text-faint);text-align:right;margin-top:2px;}
+.wa-check{color:var(--verde);}
+.wa-inp-area{padding:10px;background:#1F2C34;border-top:1px solid rgba(255,255,255,0.05);flex-shrink:0;}
+.wa-inp-row{display:flex;gap:7px;align-items:center;}
+.wa-inp{flex:1;background:var(--surface);border:none;border-radius:20px;padding:9px 14px;color:var(--text);font-family:var(--font-brand);font-size:13px;outline:none;}
+.wa-send{width:34px;height:34px;background:var(--wa-green);border:none;border-radius:50%;cursor:pointer;font-size:15px;flex-shrink:0;}
+.wa-send:hover{background:#20bc58;}
+
+/* TOAST */
+.wa-toast{position:fixed;bottom:20px;right:20px;background:#1F2C34;border:1px solid rgba(37,211,102,0.3);border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:10px;z-index:500;max-width:300px;transform:translateX(360px);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+.wa-toast.show{transform:translateX(0);}
+.toast-icon{font-size:22px;flex-shrink:0;}
+.toast-body{flex:1;}
+.toast-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--wa-green);margin-bottom:2px;}
+.toast-text{font-size:12px;color:var(--text-dim);line-height:1.3;}
+.toast-close{background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:15px;}
+
+/* CONFIG PANEL */
+.cfg-panel{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:300;display:none;align-items:center;justify-content:center;}
+.cfg-panel.open{display:flex;}
+.cfg-modal{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:28px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.cfg-title{font-family:var(--font-brand);font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px;}
+.cfg-sub{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-bottom:22px;}
+.cfg-section{margin-bottom:20px;}
+.cfg-section-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--purple);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border-soft);}
+.cfg-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.cfg-label{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;}
+.cfg-input{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-data);font-size:12px;padding:8px 12px;border-radius:8px;outline:none;transition:border-color 0.15s;width:100%;}
+.cfg-input:focus{border-color:var(--purple);}
+.cfg-hint{font-size:11px;color:var(--text-faint);line-height:1.5;margin-top:4px;}
+.cfg-hint code{background:var(--surface2);padding:1px 5px;border-radius:3px;font-family:var(--font-data);font-size:10px;color:var(--verde-bright);}
+.cfg-actions{display:flex;gap:8px;margin-top:20px;justify-content:flex-end;}
+.btn-p{background:var(--purple);border:none;color:#fff;font-family:var(--font-brand);font-weight:600;font-size:12px;padding:9px 18px;border-radius:8px;cursor:pointer;}
+.btn-p:hover{opacity:0.9;}
+.btn-s{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:var(--font-brand);font-size:12px;padding:9px 18px;border-radius:8px;cursor:pointer;}
+.btn-s:hover{border-color:var(--text-dim);}
+.cfg-test{font-family:var(--font-data);font-size:11px;padding:8px 12px;border-radius:8px;margin-top:8px;display:none;}
+.cfg-test.ok{background:var(--green-dim);color:var(--green);display:block;}
+.cfg-test.fail{background:var(--red-dim);color:var(--red);display:block;}
+.cfg-test.loading{background:var(--amber-dim);color:var(--amber);display:block;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:400;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:24px;width:440px;max-width:90vw;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:var(--font-brand);font-weight:700;font-size:15px;color:var(--text);margin-bottom:3px;}
+.modal-sub{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-bottom:15px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;}
+.fg{display:flex;flex-direction:column;gap:4px;}
+.flbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;}
+.finp{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-data);font-size:13px;padding:7px 11px;border-radius:7px;outline:none;transition:border-color 0.15s;width:100%;}
+.finp:focus{border-color:var(--verde);}
+.rrow{display:flex;align-items:center;gap:7px;}
+.rval{font-family:var(--font-data);font-size:12px;color:var(--verde-bright);min-width:36px;text-align:right;}
+input[type=range]{width:100%;accent-color:var(--verde);}
+.faction{display:flex;gap:7px;margin-top:15px;justify-content:flex-end;}
+.btn-pp{background:var(--verde);border:none;color:#fff;font-family:var(--font-brand);font-weight:600;font-size:12px;padding:8px 16px;border-radius:7px;cursor:pointer;}
+.btn-pp:hover{background:var(--verde-bright);}
+.btn-ss{background:none;border:1px solid var(--border);color:var(--text-dim);font-family:var(--font-brand);font-size:12px;padding:8px 16px;border-radius:7px;cursor:pointer;}
+
+/* ─── PAGE-SPECIFIC STYLES ─── */
+
+/* ANALYTICS PAGE */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px;}
+.analytics-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.big-num{font-family:var(--font-brand);font-size:36px;font-weight:800;color:var(--verde-bright);line-height:1;margin-bottom:4px;}
+.trend-up{color:var(--green);font-family:var(--font-data);font-size:11px;}
+.trend-down{color:var(--red);font-family:var(--font-data);font-size:11px;}
+.spark-bar{height:60px;display:flex;align-items:flex-end;gap:3px;margin-top:10px;}
+.sp-b{flex:1;border-radius:2px 2px 0 0;background:var(--verde-dim);transition:height 0.6s ease;}
+.sp-b.hi{background:var(--verde-bright);}
+
+/* ALERTS PAGE */
+.alert-filter-row{display:flex;gap:8px;margin-bottom:16px;}
+.afilt{font-family:var(--font-data);font-size:10px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--text-faint);cursor:pointer;transition:all 0.15s;}
+.afilt.active{border-color:var(--verde);color:var(--verde-bright);background:var(--verde-glow);}
+.alert-card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:12px;padding:16px;display:flex;gap:12px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.alert-card:hover{border-color:var(--border);transform:translateY(-1px);}
+.alert-card.crit{border-left:3px solid var(--red);}
+.alert-card.warn{border-left:3px solid var(--amber);}
+.alert-card.info{border-left:3px solid var(--verde);}
+.alert-card.resolved{border-left:3px solid var(--green);opacity:0.7;}
+.alert-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.alert-body{flex:1;}
+.alert-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--text);margin-bottom:3px;}
+.alert-detail{font-size:12px;color:var(--text-dim);margin-bottom:6px;}
+.alert-footer{display:flex;gap:10px;align-items:center;}
+.alert-loc{font-family:var(--font-data);font-size:10px;color:var(--text-faint);}
+.alert-time{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-left:auto;}
+.alert-wa-btn{font-family:var(--font-data);font-size:10px;color:var(--wa-green);background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);padding:3px 8px;border-radius:5px;cursor:pointer;transition:all 0.15s;}
+.alert-wa-btn:hover{background:rgba(37,211,102,0.18);}
+
+/* CLEANING LOG PAGE */
+.log-controls{display:flex;gap:10px;margin-bottom:16px;align-items:center;}
+.log-search{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-brand);font-size:13px;padding:8px 14px;border-radius:8px;outline:none;}
+.log-search:focus{border-color:var(--verde);}
+.log-table{width:100%;border-collapse:collapse;}
+.log-table th{font-family:var(--font-data);font-size:9px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;text-align:left;padding:0 12px 10px;border-bottom:1px solid var(--border-soft);}
+.log-table td{padding:11px 12px;font-size:13px;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,0.03);}
+.log-table tr:hover td{background:var(--surface);}
+.log-table .score-cell{font-family:var(--font-brand);font-weight:700;}
+.log-add-btn{font-family:var(--font-brand);font-weight:600;font-size:12px;padding:8px 16px;background:var(--verde-glow);border:1px solid var(--verde);color:var(--verde-bright);border-radius:8px;cursor:pointer;transition:all 0.15s;}
+.log-add-btn:hover{background:var(--verde-glow-strong);}
+
+/* STAFF PAGE */
+.staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.staff-card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:14px;padding:20px;text-align:center;transition:border-color 0.2s;cursor:pointer;}
+.staff-card:hover{border-color:var(--border);}
+.staff-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--verde-dim),var(--surface2));display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 12px;}
+.staff-name{font-family:var(--font-brand);font-weight:700;font-size:14px;color:var(--text);margin-bottom:3px;}
+.staff-role{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+.staff-stats{display:flex;justify-content:space-around;margin-bottom:12px;}
+.staff-stat-val{font-family:var(--font-brand);font-weight:700;font-size:18px;color:var(--verde-bright);}
+.staff-stat-lbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);text-transform:uppercase;}
+.staff-badge{display:inline-block;font-family:var(--font-data);font-size:10px;padding:3px 9px;border-radius:20px;margin-top:4px;}
+.staff-badge.active{background:var(--green-dim);color:var(--green);border:1px solid rgba(76,175,130,0.3);}
+.staff-badge.off{background:var(--surface);color:var(--text-faint);border:1px solid var(--border-soft);}
+.staff-wa{width:100%;margin-top:12px;padding:7px;background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.2);color:var(--wa-green);font-family:var(--font-data);font-size:11px;border-radius:7px;cursor:pointer;transition:all 0.15s;}
+.staff-wa:hover{background:rgba(37,211,102,0.18);}
+
+/* CERTIFICATION PAGE */
+.cert-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+.cert-big-card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:16px;padding:24px;text-align:center;position:relative;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+.cert-big-card:hover{border-color:var(--border);transform:translateY(-2px);}
+.cert-big-card.active-loc{border-color:var(--verde);box-shadow:0 0 20px var(--verde-glow);}
+.cert-emoji{font-size:48px;margin-bottom:8px;}
+.cert-loc-name{font-family:var(--font-brand);font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px;}
+.cert-score-big{font-family:var(--font-brand);font-weight:800;font-size:40px;line-height:1;margin-bottom:4px;}
+.cert-tier-lbl{font-family:var(--font-data);font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.cert-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.cert-detail-card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:12px;padding:16px;}
+.cert-detail-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--text);margin-bottom:12px;}
+.tier-req{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border-soft);font-size:12px;}
+.tier-req:last-child{border:none;}
+.tier-req-name{color:var(--text-dim);}
+.tier-req-val{font-family:var(--font-data);font-size:11px;}
+
+/* MONTHLY REPORT PAGE */
+.report-header-card{background:linear-gradient(135deg,var(--bg3),var(--surface));border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.report-title-big{font-family:var(--font-brand);font-weight:800;font-size:22px;color:var(--text);margin-bottom:4px;}
+.report-subtitle{font-family:var(--font-data);font-size:11px;color:var(--text-faint);}
+.report-download{font-family:var(--font-brand);font-weight:600;font-size:12px;padding:10px 20px;background:var(--verde-glow);border:1px solid var(--verde);color:var(--verde-bright);border-radius:9px;cursor:pointer;transition:all 0.15s;}
+.report-download:hover{background:var(--verde-glow-strong);}
+.report-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.report-kpi{background:var(--bg3);border:1px solid var(--border-soft);border-radius:12px;padding:16px;text-align:center;}
+.report-kpi-val{font-family:var(--font-brand);font-size:28px;font-weight:800;color:var(--verde-bright);margin-bottom:3px;}
+.report-kpi-lbl{font-family:var(--font-data);font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.5px;}
+.report-kpi-chg{font-family:var(--font-data);font-size:10px;margin-top:4px;}
+.month-trend{height:120px;display:flex;align-items:flex-end;gap:6px;padding-top:10px;}
+.mt-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.mt-b{width:100%;border-radius:3px 3px 0 0;transition:height 0.7s ease;}
+.mt-lbl{font-family:var(--font-data);font-size:9px;color:var(--text-faint);}
+
+/* SETTINGS PAGE */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.settings-card{background:var(--bg3);border:1px solid var(--border-soft);border-radius:14px;padding:20px;}
+.settings-card-title{font-family:var(--font-brand);font-weight:600;font-size:13px;color:var(--text);margin-bottom:4px;}
+.settings-card-sub{font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-bottom:18px;}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-soft);}
+.settings-row:last-child{border:none;}
+.settings-lbl{font-size:13px;color:var(--text-dim);}
+.settings-sub-lbl{font-family:var(--font-data);font-size:10px;color:var(--text-faint);}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--surface);border:1px solid var(--border);cursor:pointer;position:relative;transition:background 0.2s;}
+.toggle.on{background:var(--verde);border-color:var(--verde);}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left 0.2s;}
+.toggle.on::after{left:20px;}
+.settings-select{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:var(--font-data);font-size:11px;padding:5px 10px;border-radius:7px;outline:none;cursor:pointer;}
+
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo-area"><div class="logo">aiwanago<span id="sideTag">HYGIENE INTELLIGENCE</span></div></div>
+  <nav class="nav">
+    <div class="nav-label" id="nl1">Monitor</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="navTo('dashboard')">◉ <span id="ni1">Live Dashboard</span></div>
+    <div class="nav-item" id="nav-analytics" onclick="navTo('analytics')">📈 <span id="ni2">Analytics</span></div>
+    <div class="nav-item" id="nav-alerts" onclick="navTo('alerts')">🔔 <span id="ni3">Alerts</span><span class="nav-badge" id="alertBadge">2</span></div>
+    <div class="nav-label" id="nl2" style="margin-top:8px">Manage</div>
+    <div class="nav-item" id="nav-log" onclick="navTo('log')">✓ <span id="ni4">Cleaning Log</span></div>
+    <div class="nav-item" id="nav-staff" onclick="navTo('staff')">👤 <span id="ni5">Staff</span></div>
+    <div class="nav-item" id="nav-certification" onclick="navTo('certification')">🏅 <span id="ni6">Certification</span></div>
+    <div class="nav-label" id="nl3" style="margin-top:8px">Reports</div>
+    <div class="nav-item" id="nav-report" onclick="navTo('report')">📄 <span id="ni7">Monthly Report</span></div>
+    <div class="nav-item" id="nav-settings" onclick="navTo('settings')">⚙ <span id="ni8">Settings</span></div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="loc-selector">
+      <div class="loc-lbl" id="locLbl">Active Location</div>
+      <select id="locSel" onchange="switchLoc(this.value)">
+        <option value="0">Buenos Aires — Abasto Shopping</option>
+        <option value="1">Buenos Aires — Estadio Monumental</option>
+        <option value="2">Buenos Aires — Próximo piloto</option>
+      </select>
+    </div>
+    <div id="modeBadge" class="mode-badge demo" onclick="toggleMode()">
+      <span class="mode-dot"></span><span id="modeLabel">DEMO MODE</span>
+    </div>
+    <div class="lang-row">
+      <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btnES" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">Panel en Vivo <span id="locLabel">/ Abasto Shopping</span></div>
+    <div class="topbar-right">
+      <div class="last-updated" id="lastUpdated">Demo data</div>
+      <button class="tbtn tbtn-cfg" onclick="openCfg()">⚙ <span id="btnCfg">Configure Sheets</span></button>
+      <button class="tbtn tbtn-teal" onclick="openModal()">⊕ <span id="btnLog">Log Reading</span></button>
+      <button class="tbtn tbtn-wa" onclick="openWA()">💬 WhatsApp</button>
+      <div class="clk" id="clk">--:--:--</div>
+      <div class="live-dot">LIVE</div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: DASHBOARD ═══ -->
+  <div class="page active" id="page-dashboard">
+    <div style="padding:20px 24px">
+      <div class="score-hero">
+        <div class="score-card">
+          <div class="score-ring">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle class="ring-track" cx="60" cy="60" r="52"/>
+              <circle class="ring-prog" id="scoreArc" cx="60" cy="60" r="52"/>
+            </svg>
+            <div class="score-num"><div class="n" id="mainScore">87</div><div class="s">/100</div></div>
+          </div>
+          <div class="tier-badge silver" id="tierBadge">SILVER TIER</div>
+          <div class="score-meta" id="scoreMeta">Last cleaned: 47 min ago</div>
+          <div class="cert-box" id="certBox">
+            <div class="ci" id="certIcon">🥈</div>
+            <div class="cn" id="certName">Silver Certified</div>
+            <div class="cs" id="certStatus">Valid · Updated live</div>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-lbl"><span class="dot"></span><span id="kl1">VOC</span></div><div class="kpi-val warn" id="kpiUses">312 ppb</div><div class="kpi-sub" id="ks1">⚠ Elevado · umbral 250</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g" id="soapDot"></span><span id="kl2">CO₂</span></div><div class="kpi-val ok" id="kpiSoap">680 ppm</div><div class="kpi-sub" id="kpiSoapSub">✓ Normal · umbral 1000</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g" id="paperDot"></span><span id="kl3">PM2.5</span></div><div class="kpi-val ok" id="kpiPaper">8 µg/m³</div><div class="kpi-sub" id="kpiPaperSub">✓ Bueno · umbral 35</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g"></span><span id="kl4">Limpiezas hoy</span></div><div class="kpi-val ok">5<span style="font-size:12px;color:var(--text-dim)">/7</span></div><div class="kpi-sub" id="ks4">Programadas hoy</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g" id="humidDot"></span><span id="kl5">Humidity</span></div><div class="kpi-val ok" id="kpiHumid">58%</div><div class="kpi-sub" id="ks5">Normal range</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g" id="tempDot"></span><span id="kl6">Temperature</span></div><div class="kpi-val ok" id="kpiTemp">22°C</div><div class="kpi-sub" id="ks6">Comfortable</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot g"></span><span id="kl7">NOx</span></div><div class="kpi-val ok">18 idx</div><div class="kpi-sub" id="ks7">✓ Bajo · referencia &lt;50</div></div>
+          <div class="kpi"><div class="kpi-lbl"><span class="dot a"></span><span id="kl8">Ingresos</span></div><div class="kpi-val warn" id="kpiPir">23 / 30</div><div class="kpi-sub" id="ks8">Desde última limpieza</div></div>
+        </div>
+      </div>
+
+      <div class="sec-lbl" id="secSensors">AirGradient ONE · Tuya PIR — Lecturas en vivo</div>
+      <div class="sensor-grid">
+        <div class="sc warn" id="scVocCard"><div class="sc-name"><span id="sn1">VOC</span><span id="vocIco">⚠</span></div><div class="sc-val warn" id="scVoc">312<span class="u"> ppb</span></div><div class="sc-status" id="ss1">Elevado · umbral 250 ppb</div><div class="sbar"><div class="sbar-fill warn" id="bVoc" style="width:72%"></div></div></div>
+        <div class="sc ok" id="scHumidCard"><div class="sc-name"><span id="sn2">Humedad</span><span id="humidIco">✓</span></div><div class="sc-val" id="scHumid">58<span class="u">%</span></div><div class="sc-status" id="scHumidSt">Within normal range</div><div class="sbar"><div class="sbar-fill ok" id="bHumid" style="width:58%"></div></div></div>
+        <div class="sc ok" id="scTempCard"><div class="sc-name"><span id="sn3">Temperatura</span><span>✓</span></div><div class="sc-val" id="scTemp">22.4<span class="u">°C</span></div><div class="sc-status" id="ss3">Confortable</div><div class="sbar"><div class="sbar-fill ok" id="bTemp" style="width:44%"></div></div></div>
+        <div class="sc ok" id="scCo2Card"><div class="sc-name"><span id="sn4">CO₂</span><span id="co2Ico">✓</span></div><div class="sc-val" id="scCo2">680<span class="u"> ppm</span></div><div class="sc-status" id="scCo2St">Normal · umbral 1000 ppm</div><div class="sbar"><div class="sbar-fill ok" id="bCo2" style="width:45%"></div></div></div>
+        <div class="sc ok" id="scPmCard"><div class="sc-name"><span id="sn5">PM2.5</span><span id="pmIco">✓</span></div><div class="sc-val" id="scPm">8<span class="u"> µg/m³</span></div><div class="sc-status" id="ss5">Bueno · umbral 35 µg/m³</div><div class="sbar"><div class="sbar-fill ok" id="bPm" style="width:23%"></div></div></div>
+        <div class="sc ok" id="scPirCard"><div class="sc-name"><span id="sn6">PIR — Ingresos</span><span id="pirIco">✓</span></div><div class="sc-val" id="scPir">23<span class="u"> / 30</span></div><div class="sc-status" id="ss6">Desde última limpieza · umbral 30</div><div class="sbar"><div class="sbar-fill ok" id="bPir" style="width:77%"></div></div></div>
+      </div>
+
+      <div class="main-grid">
+        <div class="card">
+          <div class="card-hdr">
+            <div><div class="card-title" id="chartTitle">Traffic & Hygiene Score</div><div class="card-sub" id="chartSub">Hourly usage vs. score</div></div>
+            <div style="display:flex;gap:5px"><button class="pill active" id="pill1" onclick="chartToggle('today')">Today</button><button class="pill" id="pill2" onclick="chartToggle('week')">Week</button></div>
+          </div>
+          <div class="chart-area" id="chartArea"></div>
+        </div>
+        <div class="alerts-panel">
+          <div class="card-hdr"><div><div class="card-title" id="alertsTitle">Active Alerts</div><div class="card-sub" id="alertsSub">Requires attention</div></div></div>
+          <div id="alertsList"></div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="card">
+          <div class="card-hdr"><div><div class="card-title" id="logTitle">Cleaning Log</div><div class="card-sub" id="logSub">Today's schedule</div></div></div>
+          <table class="ltbl"><thead><tr><th id="th1">Time</th><th id="th2">Staff</th><th id="th3">Score</th><th id="th4">Status</th></tr></thead><tbody id="logBody"></tbody></table>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div><div class="card-title" id="trendTitle">7 Day Trend</div><div class="card-sub" id="trendSub">Daily avg vs. Silver target (85)</div></div></div>
+          <div id="trendChart" style="height:180px;display:flex;align-items:flex-end;gap:6px;padding-top:18px;position:relative;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: ANALYTICS ═══ -->
+  <div class="page" id="page-analytics">
+    <div style="padding:20px 24px">
+      <div class="sec-lbl" id="ana-sec1">Performance Overview</div>
+      <div class="analytics-grid" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-sub" style="margin-bottom:6px" id="ana-lbl1">Avg Hygiene Score</div>
+          <div class="big-num" id="ana-score">84.3</div>
+          <div class="trend-up">↑ +3.2 vs last month</div>
+          <div class="spark-bar" id="spark1"></div>
+        </div>
+        <div class="card">
+          <div class="card-sub" style="margin-bottom:6px" id="ana-lbl2">Total Uses This Month</div>
+          <div class="big-num" id="ana-uses">3,847</div>
+          <div class="trend-up">↑ +12% vs last month</div>
+          <div class="spark-bar" id="spark2"></div>
+        </div>
+        <div class="card">
+          <div class="card-sub" style="margin-bottom:6px" id="ana-lbl3">Alerts Resolved</div>
+          <div class="big-num" id="ana-alerts">47</div>
+          <div class="trend-up">↑ 94% resolution rate</div>
+          <div class="spark-bar" id="spark3"></div>
+        </div>
+      </div>
+      <div class="analytics-grid2">
+        <div class="card">
+          <div class="card-hdr"><div class="card-title" id="ana-t1">Score by Location</div></div>
+          <div id="locScoreChart" style="display:flex;flex-direction:column;gap:12px;"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title" id="ana-t2">Incidents This Month</div></div>
+          <table class="ltbl">
+            <thead><tr><th id="ana-th1">Type</th><th id="ana-th2">Count</th><th id="ana-th3">Avg Response</th><th id="ana-th4">Resolved</th></tr></thead>
+            <tbody id="incidentBody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title" id="ana-t3">Peak Traffic Hours</div></div>
+          <div class="chart-area" id="peakChart" style="height:130px"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title" id="ana-t4">Consumable Usage</div></div>
+          <div id="consumableChart" style="display:flex;flex-direction:column;gap:10px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: ALERTS ═══ -->
+  <div class="page" id="page-alerts">
+    <div style="padding:20px 24px">
+      <div class="alert-filter-row">
+        <button class="afilt active" id="af-all" onclick="filterAlerts('all')">All</button>
+        <button class="afilt" id="af-crit" onclick="filterAlerts('crit')">🚨 Critical</button>
+        <button class="afilt" id="af-warn" onclick="filterAlerts('warn')">⚠️ Warning</button>
+        <button class="afilt" id="af-resolved" onclick="filterAlerts('resolved')">✅ Resolved</button>
+      </div>
+      <div id="fullAlertsList"></div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: CLEANING LOG ═══ -->
+  <div class="page" id="page-log">
+    <div style="padding:20px 24px">
+      <div class="log-controls">
+        <input class="log-search" id="logSearch" placeholder="Search by staff, time..." oninput="filterLog(this.value)">
+        <button class="log-add-btn" onclick="openModal()">⊕ Add Entry</button>
+      </div>
+      <div class="card">
+        <table class="log-table">
+          <thead><tr><th>Date</th><th>Time</th><th>Staff</th><th>Score</th><th>Duration</th><th>Notes</th><th>Status</th></tr></thead>
+          <tbody id="fullLogBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: STAFF ═══ -->
+  <div class="page" id="page-staff">
+    <div style="padding:20px 24px">
+      <div class="staff-grid" id="staffGrid"></div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: CERTIFICATION ═══ -->
+  <div class="page" id="page-certification">
+    <div style="padding:20px 24px">
+      <div class="sec-lbl" id="cert-sec1">Certification Status — All Locations</div>
+      <div class="cert-hero" id="certHero"></div>
+      <div class="cert-details-grid">
+        <div class="cert-detail-card">
+          <div class="cert-detail-title">Tier Requirements</div>
+          <div class="tier-req"><span class="tier-req-name">🥇 Gold</span><span class="tier-req-val" style="color:var(--gold)">Score ≥ 90</span></div>
+          <div class="tier-req"><span class="tier-req-name">🥈 Silver</span><span class="tier-req-val" style="color:var(--silver)">Score 75–89</span></div>
+          <div class="tier-req"><span class="tier-req-name">🥉 Bronze</span><span class="tier-req-val" style="color:var(--bronze)">Score 60–74</span></div>
+          <div class="tier-req"><span class="tier-req-name">❌ Uncertified</span><span class="tier-req-val" style="color:var(--red)">Score &lt; 60</span></div>
+        </div>
+        <div class="cert-detail-card">
+          <div class="cert-detail-title">Score Components</div>
+          <div class="tier-req"><span class="tier-req-name">Soap level</span><span class="tier-req-val">–10 to –20 pts</span></div>
+          <div class="tier-req"><span class="tier-req-name">Paper level</span><span class="tier-req-val">–8 to –20 pts</span></div>
+          <div class="tier-req"><span class="tier-req-name">Humidity</span><span class="tier-req-val">–7 to –15 pts</span></div>
+          <div class="tier-req"><span class="tier-req-name">Temperature</span><span class="tier-req-val">–4 to –10 pts</span></div>
+          <div class="tier-req"><span class="tier-req-name">Water leak</span><span class="tier-req-val" style="color:var(--red)">–25 pts</span></div>
+        </div>
+        <div class="cert-detail-card" style="grid-column:span 2">
+          <div class="cert-detail-title">Certification Benefits by Tier</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px">
+            <div>
+              <div style="color:var(--bronze);font-family:var(--font-brand);font-weight:700;margin-bottom:8px">🥉 Bronze</div>
+              <div style="font-size:12px;color:var(--text-dim);line-height:1.8">Basic certification<br>Monthly report<br>Digital badge<br>Hygiene tracking</div>
+            </div>
+            <div>
+              <div style="color:var(--silver);font-family:var(--font-brand);font-weight:700;margin-bottom:8px">🥈 Silver</div>
+              <div style="font-size:12px;color:var(--text-dim);line-height:1.8">All Bronze features<br>Weekly reports<br>Staff performance<br>WhatsApp alerts</div>
+            </div>
+            <div>
+              <div style="color:var(--gold);font-family:var(--font-brand);font-weight:700;margin-bottom:8px">🥇 Gold</div>
+              <div style="font-size:12px;color:var(--text-dim);line-height:1.8">All Silver features<br>Real-time alerts<br>ESG reporting<br>Priority support</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: MONTHLY REPORT ═══ -->
+  <div class="page" id="page-report">
+    <div style="padding:20px 24px">
+      <div class="report-header-card">
+        <div>
+          <div class="report-title-big" id="reportTitle">Monthly Hygiene Report</div>
+          <div class="report-subtitle" id="reportSubtitle">FEBRUARY 2025 · GENERATED AUTOMATICALLY</div>
+        </div>
+        <button class="report-download" onclick="showToast('📄 Report ready — PDF export coming in v2')">⬇ Export PDF</button>
+      </div>
+      <div class="report-kpi-grid">
+        <div class="report-kpi"><div class="report-kpi-val" id="rk1">84.3</div><div class="report-kpi-lbl">Avg Score</div><div class="report-kpi-chg trend-up">↑ +3.2</div></div>
+        <div class="report-kpi"><div class="report-kpi-val" id="rk2">3,847</div><div class="report-kpi-lbl">Total Uses</div><div class="report-kpi-chg trend-up">↑ +12%</div></div>
+        <div class="report-kpi"><div class="report-kpi-val" id="rk3">143</div><div class="report-kpi-lbl">Cleanings Done</div><div class="report-kpi-chg trend-up">↑ 97% on time</div></div>
+        <div class="report-kpi"><div class="report-kpi-val" id="rk4">0</div><div class="report-kpi-lbl">Leak Incidents</div><div class="report-kpi-chg trend-up">✓ Zero events</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Score Trend — All Locations</div></div>
+          <div class="month-trend" id="monthTrend"></div>
+        </div>
+        <div class="card">
+          <div class="card-hdr"><div class="card-title">Incidents Summary</div></div>
+          <table class="ltbl">
+            <thead><tr><th>Location</th><th>Soap Alerts</th><th>Humidity</th><th>Resolved</th></tr></thead>
+            <tbody>
+              <tr><td>Abasto Shopping</td><td>4</td><td>1</td><td><span class="ls done">✓ Done</span></td></tr>
+              <tr><td>Estadio Monumental</td><td>7</td><td>3</td><td><span class="ls done">✓ Done</span></td></tr>
+              <tr><td>Próximo piloto</td><td>1</td><td>0</td><td><span class="ls done">✓ Done</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: SETTINGS ═══ -->
+  <div class="page" id="page-settings">
+    <div style="padding:20px 24px">
+      <div class="settings-grid">
+        <div class="settings-card">
+          <div class="settings-card-title">Notifications</div>
+          <div class="settings-card-sub">ALERT & MESSAGING PREFERENCES</div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">WhatsApp Alerts</div><div class="settings-sub-lbl">Send critical alerts via WhatsApp</div></div>
+            <div class="toggle on" id="tog1" onclick="toggleSetting(this)"></div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Soap Low Warning</div><div class="settings-sub-lbl">Alert when soap drops below 30%</div></div>
+            <div class="toggle on" id="tog2" onclick="toggleSetting(this)"></div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Paper Low Warning</div><div class="settings-sub-lbl">Alert when paper drops below 20%</div></div>
+            <div class="toggle on" id="tog3" onclick="toggleSetting(this)"></div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Humidity Warning</div><div class="settings-sub-lbl">Alert above 76% humidity</div></div>
+            <div class="toggle on" id="tog4" onclick="toggleSetting(this)"></div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Daily Summary Report</div><div class="settings-sub-lbl">Send end-of-day WhatsApp report</div></div>
+            <div class="toggle" id="tog5" onclick="toggleSetting(this)"></div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div class="settings-card-title">Dashboard</div>
+          <div class="settings-card-sub">DISPLAY & REFRESH SETTINGS</div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Auto-refresh</div><div class="settings-sub-lbl">Refresh live data automatically</div></div>
+            <div class="toggle on" id="tog6" onclick="toggleSetting(this)"></div>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Refresh Interval</div></div>
+            <select class="settings-select">
+              <option>30 seconds</option>
+              <option selected>1 minute</option>
+              <option>5 minutes</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Language</div></div>
+            <select class="settings-select" onchange="setLang(this.value==='Español'?'es':'en')">
+              <option id="settingsLangEn">English</option>
+              <option id="settingsLangEs">Español</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Live Mode Demo</div><div class="settings-sub-lbl">Simulate sensor fluctuations</div></div>
+            <div class="toggle on" id="tog7" onclick="toggleSetting(this)"></div>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div class="settings-card-title">Umbrales de Sensores</div>
+          <div class="settings-card-sub">VALORES DE ALERTA</div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">VOC — Umbral alerta</div></div>
+            <select class="settings-select"><option>200 ppb</option><option selected>250 ppb</option><option>300 ppb</option></select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">CO₂ — Umbral alerta</div></div>
+            <select class="settings-select"><option selected>1000 ppm</option><option>900 ppm</option><option>1200 ppm</option></select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Humedad — Umbral alerta</div></div>
+            <select class="settings-select"><option>70%</option><option selected>76%</option><option>80%</option></select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">PIR — Umbral de uso</div></div>
+            <select class="settings-select"><option>20</option><option selected>30</option><option>40</option></select>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div class="settings-card-title">Data & Integration</div>
+          <div class="settings-card-sub">GOOGLE SHEETS & EXPORT</div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Google Sheets Sync</div><div class="settings-sub-lbl">Configure live data connection</div></div>
+            <button class="tbtn tbtn-cfg" onclick="openCfg()" style="font-size:10px;padding:5px 10px;">Configure</button>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Export Format</div></div>
+            <select class="settings-select"><option selected>PDF</option><option>CSV</option><option>Excel</option></select>
+          </div>
+          <div class="settings-row">
+            <div><div class="settings-lbl">Data Retention</div></div>
+            <select class="settings-select"><option>30 days</option><option selected>90 days</option><option>1 year</option></select>
+          </div>
+          <div class="settings-row" style="margin-top:8px">
+            <button class="btn-pp" style="font-size:12px;padding:8px 14px" onclick="showToast('✓ Settings saved successfully')">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WA PANEL -->
+<div class="wa-panel" id="waPanel">
+  <div class="wa-hdr">
+    <div class="wa-avatar">🤖</div>
+    <div style="flex:1"><div class="wa-name">Aiwanago Bot</div><div class="wa-status" id="waOnline">● online</div></div>
+    <button class="wa-close" onclick="closeWA()">✕</button>
+  </div>
+  <div class="wa-tabs">
+    <div class="wa-tab active" id="wtab1" onclick="setWATab('alerts')">Alerts</div>
+    <div class="wa-tab" id="wtab2" onclick="setWATab('staff')">Staff</div>
+    <div class="wa-tab" id="wtab3" onclick="setWATab('reports')">Reports</div>
+  </div>
+  <div class="wa-msgs" id="waMsgs"></div>
+  <div class="wa-inp-area">
+    <div class="wa-inp-row">
+      <input class="wa-inp" id="waInp" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendWA()">
+      <button class="wa-send" onclick="sendWA()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="wa-toast" id="toast">
+  <div class="toast-icon">💬</div>
+  <div class="toast-body"><div class="toast-title">Aiwanago</div><div class="toast-text" id="toastText"></div></div>
+  <button class="toast-close" onclick="hideToast()">✕</button>
+</div>
+
+<!-- CONFIG PANEL -->
+<div class="cfg-panel" id="cfgPanel">
+  <div class="cfg-modal">
+    <div class="cfg-title" id="cfgTitle">⚙ Configure Google Sheets Integration</div>
+    <div class="cfg-sub" id="cfgSub">LIVE DATA SOURCE SETUP</div>
+    <div class="cfg-section">
+      <div class="cfg-section-title" id="cfgHow">How It Works</div>
+      <div class="cfg-hint" id="cfgHowText">
+        El AirGradient ONE envía datos via webhook/API y el sensor Tuya PIR via Make.com. Los datos se escriben automáticamente en Google Sheets.
+        Este dashboard lee la última fila de cada hoja cada 60 segundos.<br><br>
+        <strong>Paso 1:</strong> Crear Google Sheet con columnas: <code>timestamp, voc, co2, pm, humid, temp, nox, people</code><br>
+        <strong>Paso 2:</strong> Configurar Make.com para escribir datos de AirGradient API + Tuya PIR en la hoja<br>
+        <strong>Paso 3:</strong> Publicar la hoja y pegar el Sheet ID abajo<br>
+        <strong>Paso 4:</strong> Cambiar a Modo Live — el dashboard actualiza solo cada minuto
+      </div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-section-title">Abasto Shopping</div>
+      <div class="cfg-row"><label class="cfg-label">Google Sheet ID</label><input class="cfg-input" id="sheetId0" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div>
+      <button class="btn-s" style="font-size:11px;padding:6px 12px;" onclick="testSheet(0)">Test Connection</button>
+      <div class="cfg-test" id="testResult0"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-section-title">Estadio Monumental</div>
+      <div class="cfg-row"><label class="cfg-label">Google Sheet ID</label><input class="cfg-input" id="sheetId1" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div>
+      <button class="btn-s" style="font-size:11px;padding:6px 12px;" onclick="testSheet(1)">Test Connection</button>
+      <div class="cfg-test" id="testResult1"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-section-title">Próximo piloto</div>
+      <div class="cfg-row"><label class="cfg-label">Google Sheet ID</label><input class="cfg-input" id="sheetId2" placeholder="e.g. 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"></div>
+      <button class="btn-s" style="font-size:11px;padding:6px 12px;" onclick="testSheet(2)">Test Connection</button>
+      <div class="cfg-test" id="testResult2"></div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-section-title" id="cfgRefresh">Refresh Interval</div>
+      <div class="cfg-row">
+        <label class="cfg-label">Pull data every</label>
+        <select class="cfg-input" id="refreshInterval">
+          <option value="30000">30 seconds</option>
+          <option value="60000" selected>1 minute</option>
+          <option value="120000">2 minutes</option>
+          <option value="300000">5 minutes</option>
+        </select>
+      </div>
+    </div>
+    <div class="cfg-actions">
+      <button class="btn-s" onclick="closeCfg()">Cancel</button>
+      <button class="btn-p" onclick="saveCfg()">Save & Enable Live Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOG MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">⊕ Log Sensor Reading</div>
+    <div class="modal-sub" id="modalSub">MANUAL DATA ENTRY — PILOT MODE</div>
+    <div class="frow">
+      <div class="fg"><label class="flbl" id="fl1">VOC (ppb) — AirGradient</label><div class="rrow"><input type="range" min="50" max="600" value="312" id="inHumid" oninput="rv('vHumid',this.value+' ppb')"><span class="rval" id="vHumid">312 ppb</span></div></div>
+      <div class="fg"><label class="flbl" id="fl2">CO₂ (ppm) — AirGradient</label><div class="rrow"><input type="range" min="400" max="1800" value="680" id="inTemp" oninput="rv('vTemp',this.value+' ppm')"><span class="rval" id="vTemp">680 ppm</span></div></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="flbl" id="fl3">Humedad (%) — AirGradient</label><div class="rrow"><input type="range" min="20" max="100" value="61" id="inSoap" oninput="rv('vSoap',this.value+'%')"><span class="rval" id="vSoap">61%</span></div></div>
+      <div class="fg"><label class="flbl" id="fl4">Temperatura (°C) — AirGradient</label><div class="rrow"><input type="range" min="15" max="40" value="22" id="inPaper" oninput="rv('vPaper',this.value+'°C')"><span class="rval" id="vPaper">22°C</span></div></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label class="flbl" id="fl5">Ingresos desde limpieza — PIR Tuya</label><input type="number" class="finp" id="inUses" value="23" min="0" max="99"></div>
+      <div class="fg"><label class="flbl" id="fl6">Umbral PIR (alertar en)</label><input type="number" class="finp" id="inLeak" value="30" min="5" max="100"></div>
+    </div>
+    <div class="faction">
+      <button class="btn-ss" onclick="closeModal()" id="btnCancel">Cancel</button>
+      <button class="btn-pp" onclick="submitReading()" id="btnUpdate">Update Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TRANSLATIONS ──────────────────────────────────────────────────────
+const TR={
+en:{
+  sideTag:"HYGIENE INTELLIGENCE",nl1:"Monitor",ni1:"Live Dashboard",ni2:"Analytics",ni3:"Alerts",
+  nl2:"Manage",ni4:"Cleaning Log",ni5:"Staff",ni6:"Certification",nl3:"Reports",ni7:"Monthly Report",ni8:"Settings",
+  locLbl:"Active Location",btnLog:"Log Reading",btnCfg:"Configure Sheets",
+  kl1:"Uses Today",ks1:"↑ 12% vs yesterday",kl2:"Soap Level",kl3:"Paper Level",ks4:"Scheduled today",
+  kl4:"Cleanings",kl5:"Humidity",ks5:"Normal range",kl6:"Temperature",ks6:"Comfortable",
+  kl7:"NPS Impact",ks7:"Est. NPS points",kl8:"Savings",ks8:"Cost reduction",
+  secSensors:"Sensor Readings",sn1:"People Counter (ToF)",ss1:"Current occupancy",
+  sn2:"Humidity",sn3:"Temperature",ss3:"Comfortable",sn4:"Soap Dispenser",sn5:"Toilet Paper",ss5:"Adequate",
+  sn6:"Water Leak",ss6:"No anomalies",chartTitle:"Traffic & Hygiene Score",chartSub:"Hourly usage vs. score",
+  pill1:"Today",pill2:"Week",alertsTitle:"Active Alerts",alertsSub:"Requires attention",
+  logTitle:"Cleaning Log",logSub:"Today's schedule",th1:"Time",th2:"Staff",th3:"Score",th4:"Status",
+  trendTitle:"7 Day Trend",trendSub:"Daily avg vs. Silver target (85)",
+  waOnline:"● online",wtab1:"Alerts",wtab2:"Staff",wtab3:"Reports",
+  modalTitle:"⊕ Log Sensor Reading",modalSub:"MANUAL DATA ENTRY — PILOT MODE",
+  fl1:"Humidity (%)",fl2:"Temperature (°C)",fl3:"Soap Level (%)",fl4:"Paper Level (%)",
+  fl5:"Uses This Hour",fl6:"Water Leak?",opt0:"No",opt1:"Yes",btnCancel:"Cancel",btnUpdate:"Update Dashboard",
+  cfgTitle:"⚙ Configure Google Sheets Integration",cfgSub:"LIVE DATA SOURCE SETUP",cfgRefresh:"Refresh Interval",
+  certStatus:"Valid · Updated live",lastCleaned:"Last cleaned",minAgo:"min ago",
+  sc_silverCert:"Silver Certified",sc_goldCert:"Gold Certified",sc_bronzeCert:"Bronze Certified",
+  scSoapWarn:"Refill within 2 hours",scSoapCrit:"Critical — act now",scSoapOk:"Level adequate",
+  scHumidWarn:"Ventilation needed",scHumidCrit:"High humidity — act now",scHumidOk:"Within normal range",
+  done:"✓ Done",pending:"⏳ Pending",demoMode:"DEMO MODE",liveMode:"LIVE MODE",
+  lastUpdatedDemo:"Demo data",lastUpdatedLive:"Updated",lastUpdatedAgo:"ago",lastUpdatedFail:"Connection failed",
+  days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+  waGreeting:"👋 Hello! I'm the Aiwanago monitoring bot. I'll send real-time alerts when action is needed.",
+  waSoapWarn:"⚠️ *ALERT — Soap Low*\n📍 {loc}\n🧴 Level: {val}%\n\nEstimated empty in ~90 min. Please refill soon.",
+  waSoapCrit:"🚨 *URGENT — Soap Critical*\n📍 {loc}\n🧴 Level: {val}%\n\n*Immediate action required.*",
+  waPaperWarn:"⚠️ *ALERT — Paper Low*\n📍 {loc}\n🧻 Level: {val}%\n\nPlease restock within 1 hour.",
+  waPaperCrit:"🚨 *URGENT — Paper Empty*\n📍 {loc}\n🧻 Level: {val}%\n\n*Immediate restock required.*",
+  waHumidWarn:"⚠️ *ALERT — High Humidity*\n📍 {loc}\n💧 {val}%\n\nCheck exhaust fan.",
+  waLeak:"🚨 *WATER LEAK DETECTED*\n📍 {loc}\n\n*Call maintenance immediately.*",
+  waCleanDue:"🧹 *Cleaning Due*\n📍 {loc}\n👤 Assigned: {staff}\n🕐 Time: {time}\n\nCurrent score: {score}/100",
+  waCleanConf:"✅ *Cleaning Complete*\n📍 {loc}\n👤 By: {staff}\n📊 Score: {score}/100\n⭐ Great work!",
+  waReport:"📊 *Daily Summary — {loc}*\n\n📅 {date}\n👥 Uses: {uses}\n🧹 Cleanings: 5/7\n📈 Avg score: {score}/100\n🏅 Tier: {tier}\n\n✅ No critical incidents today.",
+  waStaffReply1:"✅ Got it, heading there now.",
+  botReply1:"✅ Received.",botReply2:"Thanks for the update.",botReply3:"📊 Logged.",botReply4:"🔄 Noted.",
+  waInputPh:"Type a message...",
+  sheetConnOk:"✓ Connected — last reading received {time}",
+  sheetConnFail:"✗ Could not connect. Check Sheet ID and make sure it's published to web.",
+  sheetConnLoading:"Connecting...",
+},
+es:{
+  sideTag:"INTELIGENCIA HIGIÉNICA",nl1:"Monitor",ni1:"Panel en Vivo",ni2:"Analíticas",ni3:"Alertas",
+  nl2:"Gestionar",ni4:"Registro de Limpieza",ni5:"Personal",ni6:"Certificación",nl3:"Reportes",ni7:"Reporte Mensual",ni8:"Configuración",
+  locLbl:"Ubicación Activa",btnLog:"Registrar Lectura",btnCfg:"Configurar Sheets",
+  kl1:"Usos Hoy",ks1:"↑ 12% vs ayer",kl2:"Nivel de Jabón",kl3:"Nivel de Papel",ks4:"Programadas hoy",
+  kl4:"Limpiezas",kl5:"Humedad",ks5:"Rango normal",kl6:"Temperatura",ks6:"Confortable",
+  kl7:"Impacto NPS",ks7:"Puntos NPS estimados",kl8:"Ahorro",ks8:"Reducción de costos",
+  secSensors:"Lecturas de Sensores",sn1:"Contador de Personas (ToF)",ss1:"Tasa de ocupación",
+  sn2:"Humedad",sn3:"Temperatura",ss3:"Confortable",sn4:"Dispensador de Jabón",sn5:"Papel Higiénico",ss5:"Nivel adecuado",
+  sn6:"Fuga de Agua",ss6:"Sin anomalías",chartTitle:"Tráfico y Puntaje de Higiene",chartSub:"Usos por hora vs. puntaje",
+  pill1:"Hoy",pill2:"Semana",alertsTitle:"Alertas Activas",alertsSub:"Requiere atención",
+  logTitle:"Registro de Limpieza",logSub:"Cronograma de hoy",th1:"Hora",th2:"Personal",th3:"Puntaje",th4:"Estado",
+  trendTitle:"Tendencia 7 Días",trendSub:"Promedio vs. objetivo Silver (85)",
+  waOnline:"● en línea",wtab1:"Alertas",wtab2:"Personal",wtab3:"Reportes",
+  modalTitle:"⊕ Registrar Lectura",modalSub:"INGRESO MANUAL — MODO PILOTO",
+  fl1:"Humedad (%)",fl2:"Temperatura (°C)",fl3:"Nivel Jabón (%)",fl4:"Nivel Papel (%)",
+  fl5:"Usos Esta Hora",fl6:"¿Fuga?",opt0:"No",opt1:"Sí",btnCancel:"Cancelar",btnUpdate:"Actualizar Panel",
+  cfgTitle:"⚙ Configurar Integración con Google Sheets",cfgSub:"CONFIGURACIÓN DE DATOS EN VIVO",cfgRefresh:"Intervalo de Actualización",
+  certStatus:"Válido · Actualizado en vivo",lastCleaned:"Última limpieza",minAgo:"min atrás",
+  sc_silverCert:"Certificado Silver",sc_goldCert:"Certificado Gold",sc_bronzeCert:"Certificado Bronze",
+  scSoapWarn:"Reabastecer en 2 horas",scSoapCrit:"Crítico — acción inmediata",scSoapOk:"Nivel adecuado",
+  scHumidWarn:"Se necesita ventilación",scHumidCrit:"Humedad alta — actuar",scHumidOk:"Rango normal",
+  done:"✓ Hecho",pending:"⏳ Pendiente",demoMode:"MODO DEMO",liveMode:"MODO EN VIVO",
+  lastUpdatedDemo:"Datos de demo",lastUpdatedLive:"Actualizado",lastUpdatedAgo:"atrás",lastUpdatedFail:"Sin conexión",
+  days:["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
+  waGreeting:"👋 ¡Hola! Soy el bot de monitoreo Aiwanago. Te enviaré alertas en tiempo real.",
+  waSoapWarn:"⚠️ *ALERTA — Jabón bajo*\n📍 {loc}\n🧴 Nivel: {val}%\n\nSe estima vacío en ~90 min. Recargar pronto.",
+  waSoapCrit:"🚨 *URGENTE — Jabón crítico*\n📍 {loc}\n🧴 Nivel: {val}%\n\n*Acción inmediata requerida.*",
+  waPaperWarn:"⚠️ *ALERTA — Papel bajo*\n📍 {loc}\n🧻 Nivel: {val}%\n\nReponer en la próxima hora.",
+  waPaperCrit:"🚨 *URGENTE — Papel agotado*\n📍 {loc}\n🧻 Nivel: {val}%\n\n*Reposición inmediata.*",
+  waHumidWarn:"⚠️ *ALERTA — Humedad alta*\n📍 {loc}\n💧 {val}%\n\nVerificar extractor.",
+  waLeak:"🚨 *FUGA DE AGUA*\n📍 {loc}\n\n*Llamar a mantenimiento de inmediato.*",
+  waCleanDue:"🧹 *Limpieza Programada*\n📍 {loc}\n👤 Asignado: {staff}\n🕐 Hora: {time}\n\nPuntaje actual: {score}/100",
+  waCleanConf:"✅ *Limpieza Confirmada*\n📍 {loc}\n👤 Por: {staff}\n📊 Puntaje: {score}/100\n⭐ ¡Excelente!",
+  waReport:"📊 *Resumen Diario — {loc}*\n\n📅 {date}\n👥 Usos: {uses}\n🧹 Limpiezas: 5/7\n📈 Puntaje: {score}/100\n🏅 Nivel: {tier}\n\n✅ Sin incidentes críticos.",
+  waStaffReply1:"✅ Entendido, ya voy.",
+  botReply1:"✅ Recibido.",botReply2:"Gracias.",botReply3:"📊 Registrado.",botReply4:"🔄 Anotado.",
+  waInputPh:"Escribe un mensaje...",
+  sheetConnOk:"✓ Conectado — última lectura recibida {time}",
+  sheetConnFail:"✗ No se pudo conectar. Verificar ID y que la hoja esté publicada.",
+  sheetConnLoading:"Conectando...",
+}};
+
+let lang='en';
+function t(k){return TR[lang][k]||TR.en[k]||k;}
+function tmpl(k,vals){let s=t(k);Object.keys(vals).forEach(v=>{s=s.replace(new RegExp('{'+v+'}','g'),vals[v]);});return s;}
+function rv(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+
+function setLang(l){
+  lang=l;
+  document.getElementById('btnEN').classList.toggle('active',l==='en');
+  document.getElementById('btnES').classList.toggle('active',l==='es');
+  const ids=['sideTag','nl1','ni1','ni2','ni3','nl2','ni4','ni5','ni6','nl3','ni7','ni8','locLbl',
+    'btnLog','btnCfg','kl1','ks1','kl2','kl3','ks4','kl4','kl5','ks5','kl6','ks6','kl7','ks7','kl8','ks8',
+    'secSensors','sn1','ss1','sn2','sn3','ss3','sn4','sn5','ss5','sn6','ss6',
+    'chartTitle','chartSub','pill1','pill2','alertsTitle','alertsSub',
+    'logTitle','logSub','th1','th2','th3','th4','trendTitle','trendSub',
+    'waOnline','wtab1','wtab2','wtab3','modalTitle','modalSub',
+    'fl1','fl2','fl3','fl4','fl5','fl6','opt0','opt1','btnCancel','btnUpdate',
+    'cfgTitle','cfgSub','cfgRefresh','certStatus'];
+  ids.forEach(id=>{const el=document.getElementById(id);if(el&&TR[l][id])el.textContent=TR[l][id];});
+  const waInp=document.getElementById('waInp');if(waInp)waInp.placeholder=t('waInputPh');
+  document.getElementById('modeLabel').textContent=liveMode?t('liveMode'):t('demoMode');
+  applyData(locs[curLoc]);renderAlerts();if(waTab)renderWA(waTab);
+  renderFullAlerts();renderFullLog();renderStaff();renderCertHero();
+}
+
+// ── CLOCK ──────────────────────────────────────────────────────────────
+function tick(){document.getElementById('clk').textContent=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+setInterval(tick,1000);tick();
+
+// ── LOCATIONS DATA ───────────────────────────────────────────────────
+const locs=[
+  {name:"Abasto Shopping",score:84,tier:"silver",voc:312,co2:680,pm:8,humid:61,temp:22.4,nox:18,people:23,threshold:30,lastClean:"14:30",leak:false,staff:["Mariana G.","Carlos M."],sheetId:''},
+  {name:"Estadio Monumental",score:91,tier:"gold",voc:142,co2:520,pm:5,humid:55,temp:21.8,nox:12,people:8,threshold:30,lastClean:"16:10",leak:false,staff:["Ana R.","José P."],sheetId:''},
+  {name:"Próximo piloto",score:0,tier:"bronze",voc:0,co2:0,pm:0,humid:0,temp:0,nox:0,people:0,threshold:30,lastClean:"—",leak:false,staff:["—","—"],sheetId:''},
+];
+let curLoc=0,liveMode=false,liveInterval=null,lastFetch=null;
+
+function switchLoc(i){
+  curLoc=parseInt(i);
+  document.getElementById('locLabel').textContent='/ '+locs[curLoc].name;
+  applyData(locs[curLoc]);waExtra=[];renderAlerts();if(waTab)renderWA(waTab);
+  renderFullAlerts();renderFullLog();renderCertHero();
+  if(liveMode) fetchSheetData(curLoc);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────
+const pageNames={
+  'dashboard':'Live Dashboard','analytics':'Analytics','alerts':'Alerts',
+  'log':'Cleaning Log','staff':'Staff','certification':'Certification',
+  'report':'Monthly Report','settings':'Settings'
+};
+const pageTitlesEs={
+  'dashboard':'Panel en Vivo','analytics':'Analíticas','alerts':'Alertas',
+  'log':'Registro de Limpieza','staff':'Personal','certification':'Certificación',
+  'report':'Reporte Mensual','settings':'Configuración'
+};
+
+function navTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('nav-'+page).classList.add('active');
+  const title=lang==='es'?(pageTitlesEs[page]||pageNames[page]):pageNames[page];
+  const ptEl=document.getElementById('pageTitle');
+  ptEl.innerHTML=title+' <span id="locLabel">/ '+locs[curLoc].name+'</span>';
+  // Render page-specific content
+  if(page==='analytics') renderAnalytics();
+  if(page==='alerts') renderFullAlerts();
+  if(page==='log') renderFullLog();
+  if(page==='staff') renderStaff();
+  if(page==='certification') renderCertHero();
+  if(page==='report') renderReport();
+}
+
+// ── CHART TOGGLE ─────────────────────────────────────────────────────
+let chartView='today';
+function chartToggle(view){
+  chartView=view;
+  document.getElementById('pill1').classList.toggle('active',view==='today');
+  document.getElementById('pill2').classList.toggle('active',view==='week');
+  buildChart(locs[curLoc].score,view);
+}
+
+// ── GOOGLE SHEETS ─────────────────────────────────────────────────────
+async function fetchSheetData(locIdx){
+  const sheetId=locs[locIdx].sheetId;
+  if(!sheetId){updateFreshness('demo');return;}
+  const url=`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq=SELECT%20*%20ORDER%20BY%20A%20DESC%20LIMIT%201`;
+  try{
+    const res=await fetch(url);if(!res.ok)throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const json=JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const row=json.table.rows[0].c;
+    // AirGradient ONE columns: timestamp, voc, co2, pm, humid, temp, nox | PIR: people
+    locs[locIdx].voc=parseFloat(row[1]?.v)||locs[locIdx].voc;
+    locs[locIdx].co2=parseFloat(row[2]?.v)||locs[locIdx].co2;
+    locs[locIdx].pm=parseFloat(row[3]?.v)||locs[locIdx].pm;
+    locs[locIdx].humid=parseFloat(row[4]?.v)||locs[locIdx].humid;
+    locs[locIdx].temp=parseFloat(row[5]?.v)||locs[locIdx].temp;
+    locs[locIdx].nox=parseFloat(row[6]?.v)||locs[locIdx].nox;
+    locs[locIdx].people=parseInt(row[7]?.v)||locs[locIdx].people;
+    let s=100;
+    if((locs[locIdx].voc||0)>350)s-=20;else if((locs[locIdx].voc||0)>250)s-=10;
+    if((locs[locIdx].co2||0)>1200)s-=15;else if((locs[locIdx].co2||0)>1000)s-=7;
+    if(locs[locIdx].humid>86)s-=12;else if(locs[locIdx].humid>76)s-=5;
+    if(locs[locIdx].temp>30)s-=8;else if(locs[locIdx].temp>28)s-=3;
+    const pct2=(locs[locIdx].people||0)/(locs[locIdx].threshold||30);
+    if(pct2>=1)s-=20;else if(pct2>=0.8)s-=10;
+    locs[locIdx].score=Math.max(0,Math.min(100,s));
+    locs[locIdx].tier=s>=90?'gold':s>=75?'silver':'bronze';
+    lastFetch=new Date();
+    if(locIdx===curLoc){applyData(locs[locIdx]);renderAlerts();autoAlert(locs[locIdx]);}
+    updateFreshness('fresh');
+  }catch(e){console.warn('Sheet fetch failed:',e.message);updateFreshness('stale');}
+}
+
+function updateFreshness(state){
+  const el=document.getElementById('lastUpdated');
+  el.className='last-updated '+(state==='fresh'?'fresh':state==='stale'?'stale':'');
+  if(state==='demo') el.textContent=t('lastUpdatedDemo');
+  else if(state==='fresh'&&lastFetch) el.textContent=t('lastUpdatedLive')+' '+timeSince(lastFetch)+' '+t('lastUpdatedAgo');
+  else if(state==='stale') el.textContent=t('lastUpdatedFail');
+}
+function timeSince(date){const s=Math.floor((new Date()-date)/1000);return s<60?s+'s':Math.floor(s/60)+'m';}
+
+// ── MODE TOGGLE ───────────────────────────────────────────────────────
+function toggleMode(){
+  if(!liveMode){const hasAny=locs.some(l=>l.sheetId);if(!hasAny){openCfg();return;}enableLive();}
+  else{disableLive();}
+}
+function enableLive(){
+  liveMode=true;
+  document.getElementById('modeBadge').className='mode-badge live';
+  document.getElementById('modeLabel').textContent=t('liveMode');
+  const interval=parseInt(document.getElementById('refreshInterval')?.value||60000);
+  fetchSheetData(curLoc);liveInterval=setInterval(()=>fetchSheetData(curLoc),interval);
+}
+function disableLive(){
+  liveMode=false;clearInterval(liveInterval);
+  document.getElementById('modeBadge').className='mode-badge demo';
+  document.getElementById('modeLabel').textContent=t('demoMode');
+  updateFreshness('demo');
+}
+
+// ── CONFIG ────────────────────────────────────────────────────────────
+function openCfg(){document.getElementById('cfgPanel').classList.add('open');}
+function closeCfg(){document.getElementById('cfgPanel').classList.remove('open');}
+async function testSheet(idx){
+  const id=document.getElementById('sheetId'+idx).value.trim();
+  const result=document.getElementById('testResult'+idx);
+  if(!id){result.className='cfg-test fail';result.textContent='Please enter a Sheet ID first.';return;}
+  result.className='cfg-test loading';result.textContent=t('sheetConnLoading');
+  const url=`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq=SELECT%20*%20ORDER%20BY%20A%20DESC%20LIMIT%201`;
+  try{
+    const res=await fetch(url);if(!res.ok)throw new Error('HTTP '+res.status);
+    const text=await res.text();if(!text.includes('google.visualization'))throw new Error('Not a valid sheet');
+    const json=JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const rows=json.table?.rows;if(!rows||rows.length===0)throw new Error('No data rows');
+    result.className='cfg-test ok';result.textContent=tmpl('sheetConnOk',{time:(rows[0].c[0]?.v||'unknown').toString().substring(0,20)});
+  }catch(e){result.className='cfg-test fail';result.textContent=t('sheetConnFail');}
+}
+function saveCfg(){
+  locs[0].sheetId=document.getElementById('sheetId0').value.trim();
+  locs[1].sheetId=document.getElementById('sheetId1').value.trim();
+  locs[2].sheetId=document.getElementById('sheetId2').value.trim();
+  closeCfg();if(locs.some(l=>l.sheetId))enableLive();
+}
+
+// ── APPLY DASHBOARD DATA ──────────────────────────────────────────────
+function applyData(loc){
+  const s=loc.score;
+  document.getElementById('mainScore').textContent=s;
+  const circ=2*Math.PI*52;
+  document.getElementById('scoreArc').style.strokeDasharray=circ;
+  document.getElementById('scoreArc').style.strokeDashoffset=circ-(s/100)*circ;
+  const scoreColor=s>=90?'var(--gold)':s>=75?'var(--verde-bright)':'var(--bronze)';
+  document.getElementById('scoreArc').style.stroke=scoreColor;
+  document.getElementById('mainScore').style.color=scoreColor;
+  const badge=document.getElementById('tierBadge');
+  badge.className='tier-badge '+loc.tier;
+  badge.textContent=loc.tier.toUpperCase()+' TIER';
+  const icons={gold:'🥇',silver:'🥈',bronze:'🥉'};
+  document.getElementById('certIcon').textContent=icons[loc.tier];
+  document.getElementById('certName').textContent=t('sc_'+loc.tier+'Cert');
+  document.getElementById('certBox').style.borderColor=loc.tier==='gold'?'rgba(212,168,67,0.3)':loc.tier==='silver'?'rgba(158,173,184,0.3)':'rgba(196,132,90,0.3)';
+  document.getElementById('scoreMeta').textContent=t('lastCleaned')+': 47 '+t('minAgo');
+  // VOC (AirGradient ONE)
+  const voc=loc.voc||0,vocWarn=voc>250;
+  const vocEl=document.getElementById('scVoc'),vocBar=document.getElementById('bVoc'),vocCard=document.getElementById('scVocCard'),vocIco=document.getElementById('vocIco'),vocSt=document.getElementById('ss1');
+  if(vocEl) vocEl.innerHTML=voc+'<span class="u"> ppb</span>';
+  if(vocCard) vocCard.className='sc '+(vocWarn?'warn':'ok');
+  if(vocIco) vocIco.textContent=vocWarn?'⚠':'✓';
+  if(vocBar){vocBar.style.width=Math.min(100,(voc/500*100)).toFixed(0)+'%';vocBar.className='sbar-fill '+(vocWarn?'warn':'ok');}
+  if(vocSt) vocSt.textContent=vocWarn?'Elevado · umbral 250 ppb':'Normal';
+  const kpiUses=document.getElementById('kpiUses');if(kpiUses){kpiUses.textContent=voc+' ppb';kpiUses.className='kpi-val '+(vocWarn?'warn':'ok');}
+  // CO2 (AirGradient ONE)
+  const co2=loc.co2||0,co2Warn=co2>1000;
+  const co2El=document.getElementById('scCo2'),co2Bar=document.getElementById('bCo2'),co2Card=document.getElementById('scCo2Card'),co2Ico=document.getElementById('co2Ico'),co2St=document.getElementById('scCo2St');
+  if(co2El) co2El.innerHTML=co2+'<span class="u"> ppm</span>';
+  if(co2Card) co2Card.className='sc '+(co2Warn?'warn':'ok');
+  if(co2Ico) co2Ico.textContent=co2Warn?'⚠':'✓';
+  if(co2Bar){co2Bar.style.width=Math.min(100,(co2/1500*100)).toFixed(0)+'%';co2Bar.className='sbar-fill '+(co2Warn?'warn':'ok');}
+  if(co2St) co2St.textContent=co2Warn?'Alto · umbral 1000 ppm':'Normal · umbral 1000 ppm';
+  const kpiSoap=document.getElementById('kpiSoap');if(kpiSoap){kpiSoap.textContent=co2+' ppm';kpiSoap.className='kpi-val '+(co2Warn?'warn':'ok');}
+  // PM2.5 (AirGradient ONE)
+  const pm=loc.pm||0,pmWarn=pm>35;
+  const pmEl=document.getElementById('scPm'),pmBar=document.getElementById('bPm'),pmCard=document.getElementById('scPmCard'),pmIco=document.getElementById('pmIco'),pmSt=document.getElementById('ss5');
+  if(pmEl) pmEl.innerHTML=pm+'<span class="u"> µg/m³</span>';
+  if(pmCard) pmCard.className='sc '+(pmWarn?'warn':'ok');
+  if(pmIco) pmIco.textContent=pmWarn?'⚠':'✓';
+  if(pmBar){pmBar.style.width=Math.min(100,(pm/50*100)).toFixed(0)+'%';pmBar.className='sbar-fill '+(pmWarn?'warn':'ok');}
+  if(pmSt) pmSt.textContent=pmWarn?'Alto · umbral 35 µg/m³':'Bueno · umbral 35 µg/m³';
+  // Humidity + Temp (AirGradient ONE)
+  setKPI('kpiHumid','humidDot',loc.humid,76,86,'%',true);
+  setKPI('kpiTemp','tempDot',loc.temp,29,33,'°C',true);
+  updSensor('scHumid','bHumid','scHumidCard','humidIco','scHumidSt',loc.humid,76,86,'%','humid',true);
+  document.getElementById('scTemp').innerHTML=loc.temp+'<span class="u">°C</span>';
+  document.getElementById('bTemp').style.width=Math.min(100,(loc.temp/40)*100)+'%';
+  // PIR counter (Tuya)
+  const pir=loc.people||0,pirTh=loc.threshold||30,pirWarn=pir>=pirTh;
+  const pirEl=document.getElementById('scPir'),pirBar=document.getElementById('bPir'),pirCard=document.getElementById('scPirCard'),pirIco=document.getElementById('pirIco'),pirSt=document.getElementById('ss6');
+  if(pirEl) pirEl.innerHTML=pir+'<span class="u"> / '+pirTh+'</span>';
+  if(pirCard) pirCard.className='sc '+(pirWarn?'warn':'ok');
+  if(pirIco) pirIco.textContent=pirWarn?'⚠':'✓';
+  if(pirBar){pirBar.style.width=Math.min(100,(pir/pirTh*100)).toFixed(0)+'%';pirBar.className='sbar-fill '+(pirWarn?'warn':'ok');}
+  if(pirSt) pirSt.textContent='Desde última limpieza · umbral '+pirTh;
+  const kpiPir=document.getElementById('kpiPir');if(kpiPir){kpiPir.textContent=pir+' / '+pirTh;kpiPir.className='kpi-val '+(pirWarn?'warn':'ok');}
+  const ks8=document.getElementById('ks8');if(ks8) ks8.textContent='Desde última limpieza';
+  buildChart(s,chartView);buildTrend(s);renderLog(loc);
+}
+
+function setKPI(vid,did,val,wT,bT,unit,inv=false){
+  const bad=inv?val>bT:val<bT,warn=inv?(val>wT&&val<=bT):(val<wT&&val>=bT);
+  document.getElementById(vid).className='kpi-val '+(bad?'bad':warn?'warn':'ok');
+  document.getElementById(vid).textContent=val+unit;
+  const d=document.getElementById(did);if(d)d.className='dot '+(bad?'r':warn?'a':'g');
+}
+function updSensor(vid,bid,cid,ico,stid,val,wT,bT,unit,type,inv=false){
+  const bad=inv?val>bT:val<bT,warn=inv?(val>wT&&val<=bT):(val<wT&&val>=bT);
+  document.getElementById(vid).innerHTML=val+'<span class="u">'+unit+'</span>';
+  document.getElementById(vid).className='sc-val '+(bad?'bad':warn?'warn':'');
+  document.getElementById(bid).style.width=Math.min(100,val)+'%';
+  document.getElementById(bid).className='sbar-fill '+(bad?'bad':warn?'warn':'ok');
+  document.getElementById(cid).className='sc '+(bad?'critical':warn?'warn':'ok');
+  if(ico)document.getElementById(ico).textContent=bad?'🚨':warn?'⚠':'✓';
+  if(stid){const pfx=type==='humid'?'scHumid':'scSoap';document.getElementById(stid).textContent=bad?t(pfx+'Crit'):warn?t(pfx+'Warn'):t(pfx+'Ok');}
+}
+
+// ── ALERTS ────────────────────────────────────────────────────────────
+function getAlerts(loc){
+  const a=[],ln=loc.name;
+  const voc=loc.voc||0,co2=loc.co2||0,humid=loc.humid||0,pir=loc.people||0,pirTh=loc.threshold||30;
+  // VOC alert (AirGradient ONE — Path 1)
+  if(voc>250)a.push({ico:'⚠️',tp:'amber',title:'Calidad de aire degradada — VOC '+voc+' ppb',meta:'Superado umbral por más de 10 min · Limpieza necesaria',t:'8 min',wk:'waSoapWarn',vals:{loc:ln,val:voc}});
+  // CO2 alert (AirGradient ONE)
+  if(co2>1000)a.push({ico:'⚠️',tp:'amber',title:'CO₂ elevado — '+co2+' ppm',meta:'Ventilación insuficiente · Revisar extractor',t:'5 min',wk:'waHumidWarn',vals:{loc:ln,val:co2}});
+  // PIR usage alert (Tuya — Path 2)
+  if(pir>=pirTh)a.push({ico:'🚽',tp:'red',title:'Alta actividad — '+pir+' ingresos desde última limpieza',meta:'Umbral '+pirTh+' alcanzado · Favor limpiar',t:'now',wk:'waCleanDue',vals:{loc:ln,staff:loc.staff[0],time:'ahora',score:loc.score}});
+  else if(pir>=Math.round(pirTh*0.8))a.push({ico:'⚠️',tp:'amber',title:'Actividad elevada — '+pir+'/'+pirTh+' ingresos',meta:'Próximo al umbral de limpieza',t:'15 min',wk:'waCleanDue',vals:{loc:ln,staff:loc.staff[0],time:'pronto',score:loc.score}});
+  // Humidity alert (AirGradient ONE)
+  if(humid>76)a.push({ico:'⚠️',tp:'amber',title:'Humedad alta — '+humid+'%',meta:'Revisar ventilación',t:'5 min',wk:'waHumidWarn',vals:{loc:ln,val:humid}});
+  // Last cleaning confirmed
+  a.push({ico:'✅',tp:'green',title:'Limpieza confirmada',meta:loc.staff[1]+' · Contador reiniciado · Score actualizado',t:loc.lastClean||'14:30',wk:null});
+  return a;
+}
+function renderAlerts(){
+  const loc=locs[curLoc],alerts=getAlerts(loc);
+  document.getElementById('alertBadge').textContent=alerts.filter(a=>a.tp!=='green').length;
+  document.getElementById('alertsList').innerHTML=alerts.map(a=>`
+    <div class="ai" onclick="alertClick('${a.wk||''}','${encodeURIComponent(JSON.stringify(a.vals||{}))}')">
+      <div class="ai-icon ${a.tp}">${a.ico}</div>
+      <div class="ai-body"><div class="ai-title">${a.title}</div><div class="ai-meta">${a.meta}</div></div>
+      <div class="ai-time">${a.t}</div>
+    </div>`).join('');
+}
+function alertClick(key,encoded){if(!key)return;try{sendWAAlert(key,JSON.parse(decodeURIComponent(encoded)));}catch(e){}}
+
+// ── FULL ALERTS PAGE ──────────────────────────────────────────────────
+let alertFilter='all';
+function filterAlerts(f){
+  alertFilter=f;
+  ['all','crit','warn','resolved'].forEach(x=>{document.getElementById('af-'+x).classList.toggle('active',x===f);});
+  renderFullAlerts();
+}
+function renderFullAlerts(){
+  const allAlerts=[];
+  locs.forEach(loc=>{
+    getAlerts(loc).forEach(a=>{
+      allAlerts.push({...a,locName:loc.name});
+    });
+  });
+  // Add some "resolved" historical alerts for demo
+  allAlerts.push({ico:'✅',tp:'green',title:lang==='es'?'Jabón recargado':'Soap refilled',meta:'Carlos M. — '+locs[0].name,t:'2h ago',wk:null,locName:locs[0].name});
+  allAlerts.push({ico:'✅',tp:'green',title:lang==='es'?'Papel repuesto':'Paper restocked',meta:'Ana R. — '+locs[1].name,t:'3h ago',wk:null,locName:locs[1].name});
+  allAlerts.push({ico:'✅',tp:'green',title:lang==='es'?'Humedad normalizada':'Humidity normalized',meta:locs[2].name,t:'yesterday',wk:null,locName:locs[2].name});
+
+  const filtered=allAlerts.filter(a=>{
+    if(alertFilter==='crit') return a.tp==='red';
+    if(alertFilter==='warn') return a.tp==='amber';
+    if(alertFilter==='resolved') return a.tp==='green';
+    return true;
+  });
+  const typeClass={red:'crit',amber:'warn',green:'resolved'};
+  const el=document.getElementById('fullAlertsList');
+  if(!el)return;
+  el.innerHTML=filtered.map(a=>`
+    <div class="alert-card ${typeClass[a.tp]||'info'}" onclick="${a.wk?`alertClick('${a.wk}','${encodeURIComponent(JSON.stringify(a.vals||{}))}')`:''}" >
+      <div class="alert-icon" style="background:${a.tp==='red'?'var(--red-dim)':a.tp==='amber'?'var(--amber-dim)':'var(--green-dim)'}">${a.ico}</div>
+      <div class="alert-body">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-detail">${a.meta}</div>
+        <div class="alert-footer">
+          <span class="alert-loc">📍 ${a.locName}</span>
+          <span class="alert-time">${a.t}</span>
+          ${a.wk?`<button class="alert-wa-btn" onclick="event.stopPropagation();alertClick('${a.wk}','${encodeURIComponent(JSON.stringify(a.vals||{}))}')">💬 WhatsApp</button>`:''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ── CLEANING LOG PAGE ─────────────────────────────────────────────────
+const fullLogData=[
+  {date:'Today',time:'08:00',staff:'Maria G.',score:91,dur:'18 min',notes:'Deep clean',status:'done'},
+  {date:'Today',time:'10:30',staff:'Carlos M.',score:88,dur:'15 min',notes:'Soap refilled',status:'done'},
+  {date:'Today',time:'12:00',staff:'Maria G.',score:85,dur:'20 min',notes:'High traffic',status:'done'},
+  {date:'Today',time:'14:00',staff:'Carlos M.',score:87,dur:'16 min',notes:'OK',status:'done'},
+  {date:'Today',time:'16:00',staff:'Maria G.',score:'—',dur:'—',notes:'—',status:'pending'},
+  {date:'Today',time:'18:00',staff:'Carlos M.',score:'—',dur:'—',notes:'—',status:'pending'},
+  {date:'Today',time:'20:00',staff:'Maria G.',score:'—',dur:'—',notes:'—',status:'pending'},
+  {date:'Yesterday',time:'08:00',staff:'Carlos M.',score:89,dur:'17 min',notes:'Normal',status:'done'},
+  {date:'Yesterday',time:'12:00',staff:'Maria G.',score:84,dur:'22 min',notes:'Paper low',status:'done'},
+  {date:'Yesterday',time:'18:00',staff:'Carlos M.',score:90,dur:'14 min',notes:'Excellent',status:'done'},
+];
+function renderFullLog(query=''){
+  const el=document.getElementById('fullLogBody');if(!el)return;
+  const data=query?fullLogData.filter(r=>r.staff.toLowerCase().includes(query)||r.time.includes(query)||r.date.toLowerCase().includes(query)):fullLogData;
+  el.innerHTML=data.map(r=>{
+    const sc=r.score!=='—'?`<span class="log-table score-cell" style="color:${r.score>=85?'var(--green)':r.score>=75?'var(--amber)':'var(--red)'}">${r.score}</span>`:'—';
+    return `<tr><td>${r.date}</td><td>${r.time}</td><td>${r.staff}</td><td>${sc}</td><td>${r.dur}</td><td>${r.notes}</td><td><span class="ls ${r.status}">${t(r.status)}</span></td></tr>`;
+  }).join('');
+}
+function filterLog(q){renderFullLog(q.toLowerCase());}
+
+// ── LOG (dashboard mini) ───────────────────────────────────────────────
+function renderLog(loc){
+  const times=['08:00','10:30','12:00','14:00','16:00','18:00','20:00'];
+  const scores=[91,88,85,87,'—','—','—'];
+  const st=['done','done','done','done','pending','pending','pending'];
+  document.getElementById('logBody').innerHTML=times.map((tm,i)=>{
+    const sc=scores[i]!=='—'?`<span style="color:var(--verde)">${scores[i]}</span>`:'—';
+    return `<tr><td>${tm}</td><td>${loc.staff[i%2]}</td><td>${sc}</td><td><span class="ls ${st[i]}">${t(st[i])}</span></td></tr>`;
+  }).join('');
+}
+
+// ── STAFF ─────────────────────────────────────────────────────────────
+const staffData=[
+  {name:'Mariana G.',role:'Encargada de Higiene',emoji:'👩',loc:'Abasto Shopping',cleanings:48,avgScore:88,onShift:true},
+  {name:'Carlos M.',role:'Operario de Limpieza',emoji:'👨',loc:'Abasto Shopping',cleanings:42,avgScore:85,onShift:false},
+  {name:'Ana R.',role:'Encargada de Higiene',emoji:'👩',loc:'Estadio Monumental',cleanings:51,avgScore:83,onShift:true},
+  {name:'José P.',role:'Operario de Limpieza',emoji:'👨',loc:'Estadio Monumental',cleanings:39,avgScore:80,onShift:true},
+  {name:'Luis V.',role:'Operario',emoji:'👨',loc:'Próximo piloto',cleanings:0,avgScore:0,onShift:false},
+  {name:'Carmen Z.',role:'Operaria',emoji:'👩',loc:'Próximo piloto',cleanings:0,avgScore:0,onShift:false},
+];
+function renderStaff(){
+  const el=document.getElementById('staffGrid');if(!el)return;
+  el.innerHTML=staffData.map(s=>`
+    <div class="staff-card">
+      <div class="staff-avatar">${s.emoji}</div>
+      <div class="staff-name">${s.name}</div>
+      <div class="staff-role">${s.role}</div>
+      <div style="font-family:var(--font-data);font-size:10px;color:var(--text-faint);margin-bottom:10px">📍 ${s.loc}</div>
+      <div class="staff-stats">
+        <div><div class="staff-stat-val">${s.cleanings}</div><div class="staff-stat-lbl">${lang==='es'?'Limpiezas':'Cleanings'}</div></div>
+        <div><div class="staff-stat-val">${s.avgScore}</div><div class="staff-stat-lbl">${lang==='es'?'Prom.':'Avg'}</div></div>
+      </div>
+      <span class="staff-badge ${s.onShift?'active':'off'}">${s.onShift?(lang==='es'?'● En turno':'● On shift'):(lang==='es'?'Fuera de turno':'Off shift')}</span>
+      <button class="staff-wa" onclick="staffWA('${s.name}','${s.loc}')">💬 WhatsApp</button>
+    </div>`).join('');
+}
+function staffWA(name,loc){
+  const time=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  waExtra.push({tab:'staff',type:'in',text:`👤 ${name} (${loc})\n${lang==='es'?'Turno iniciado. Lista para limpiezas.':'Shift started. Ready for cleanings.'}`,time});
+  openWA();setWATab('staff');
+}
+
+// ── CERTIFICATION ─────────────────────────────────────────────────────
+function renderCertHero(){
+  const el=document.getElementById('certHero');if(!el)return;
+  const tierColors={gold:'var(--gold)',silver:'var(--silver)',bronze:'var(--bronze)'};
+  const tierIcons={gold:'🥇',silver:'🥈',bronze:'🥉'};
+  el.innerHTML=locs.map((loc,i)=>`
+    <div class="cert-big-card ${i===curLoc?'active-loc':''}" onclick="switchLocAndNav(${i})">
+      <div class="cert-emoji">${tierIcons[loc.tier]}</div>
+      <div class="cert-loc-name">${loc.name}</div>
+      <div class="cert-score-big" style="color:${tierColors[loc.tier]}">${loc.score}</div>
+      <div class="cert-tier-lbl" style="color:${tierColors[loc.tier]}">${loc.tier.toUpperCase()} ${lang==='es'?'NIVEL':'TIER'}</div>
+    </div>`).join('');
+}
+function switchLocAndNav(i){
+  document.getElementById('locSel').value=i;
+  switchLoc(i);
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────────────────
+function renderAnalytics(){
+  // Spark bars
+  const sparkData=[[72,78,80,83,85,87,84],[2900,3100,3400,3200,3600,3847,3700],[38,42,45,43,47,44,47]];
+  ['spark1','spark2','spark3'].forEach((id,si)=>{
+    const el=document.getElementById(id);if(!el)return;
+    const max=Math.max(...sparkData[si]);
+    el.innerHTML=sparkData[si].map((v,i)=>`<div class="sp-b ${i===sparkData[si].length-1?'hi':''}" style="height:${(v/max)*100}%"></div>`).join('');
+  });
+  // Update big nums based on current location
+  const loc=locs[curLoc];
+  document.getElementById('ana-score').textContent=loc.score;
+  document.getElementById('ana-uses').textContent=(1200+loc.people*80).toLocaleString();
+
+  // Location score bars
+  const lsEl=document.getElementById('locScoreChart');if(lsEl){
+    lsEl.innerHTML=locs.map(l=>{
+      const c=l.score>=90?'var(--gold)':l.score>=75?'var(--verde-bright)':'var(--bronze)';
+      return `<div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:12px;color:var(--text-dim)">${l.name.split(' — ')[0]}</span>
+          <span style="font-family:var(--font-data);font-size:12px;color:${c};font-weight:700">${l.score}</span>
+        </div>
+        <div style="height:6px;background:var(--surface);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${l.score}%;background:${c};border-radius:3px;transition:width 0.8s ease"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  // Incidents table
+  const incEl=document.getElementById('incidentBody');if(incEl){
+    incEl.innerHTML=[
+      {type:lang==='es'?'Jabón bajo':'Soap low',count:12,resp:'8 min',resolved:'100%'},
+      {type:lang==='es'?'Papel bajo':'Paper low',count:8,resp:'12 min',resolved:'100%'},
+      {type:lang==='es'?'Humedad alta':'High humidity',count:4,resp:'25 min',resolved:'75%'},
+      {type:lang==='es'?'Fuga de agua':'Water leak',count:0,resp:'—',resolved:'—'},
+    ].map(r=>`<tr><td>${r.type}</td><td>${r.count}</td><td>${r.resp}</td><td><span style="color:var(--green);font-family:var(--font-data);font-size:11px">${r.resolved}</span></td></tr>`).join('');
+  }
+  // Peak chart
+  buildPeakChart();
+  // Consumable
+  const conEl=document.getElementById('consumableChart');if(conEl){
+    const items=[{name:lang==='es'?'Jabón':'Soap',used:68,unit:'%'},
+                 {name:lang==='es'?'Papel':'Paper',used:45,unit:'%'},
+                 {name:lang==='es'?'Desodorante':'Air Freshener',used:82,unit:'%'}];
+    conEl.innerHTML=items.map(it=>`
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:12px;color:var(--text-dim)">${it.name}</span>
+          <span style="font-family:var(--font-data);font-size:11px;color:var(--amber)">${it.used}${it.unit} ${lang==='es'?'usado':'used'}</span>
+        </div>
+        <div style="height:5px;background:var(--surface);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${it.used}%;background:var(--amber);border-radius:3px;transition:width 0.8s ease"></div>
+        </div>
+      </div>`).join('');
+  }
+}
+function buildPeakChart(){
+  const el=document.getElementById('peakChart');if(!el)return;
+  const hrs=['08','09','10','11','12','13','14','15','16','17','18','19'];
+  const uses=[8,12,22,18,31,28,20,15,12,14,9,6];
+  const max=Math.max(...uses);el.innerHTML='';
+  hrs.forEach((h,i)=>{
+    const g=document.createElement('div');g.className='bg';
+    const b=document.createElement('div');b.className='b';b.style.height='0';
+    const l=document.createElement('div');l.className='bl';l.textContent=h;
+    g.appendChild(b);g.appendChild(l);el.appendChild(g);
+    setTimeout(()=>{b.style.height=(uses[i]/max*120)+'px';},60+i*40);
+  });
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────
+function buildChart(base,view='today'){
+  const labels=view==='week'?t('days'):['08','09','10','11','12','13','14','15','16','17','18','19','20'];
+  const uses=view==='week'?[120,145,98,167,201,183,142]:[8,12,18,22,31,28,25,19,14,16,11,9,6];
+  const max=Math.max(...uses);
+  const area=document.getElementById('chartArea');area.innerHTML='';
+  labels.forEach((h,i)=>{
+    const hp=(uses[i]/max)*100,sc=Math.max(60,base-Math.floor(uses[i]/4));
+    const al=sc<70,wn=sc<80&&!al;
+    const g=document.createElement('div');g.className='bg';
+    const b=document.createElement('div');b.className='b'+(al?' al':wn?' wn':'');b.style.height='0';b.style.maxHeight='143px';
+    const l=document.createElement('div');l.className='bl';l.textContent=h;
+    g.appendChild(b);g.appendChild(l);area.appendChild(g);
+    setTimeout(()=>{b.style.height=(hp/100*143)+'px';},80+i*35);
+  });
+}
+function buildTrend(today){
+  const days=t('days');
+  const scores=[0,1,2,3,4,5,6].map(i=>i===6?today:Math.max(60,today-[8,5,11,3,6,2][i]));
+  const area=document.getElementById('trendChart');area.innerHTML='';
+  const tl=document.createElement('div');
+  tl.style.cssText='position:absolute;left:0;right:0;height:1px;border-top:1px dashed rgba(245,166,35,0.4);';
+  const tp=((85-60)/40)*100;tl.style.bottom=tp+'%';area.appendChild(tl);
+  const ll=document.createElement('div');
+  ll.style.cssText=`position:absolute;right:0;font-family:var(--font-data);font-size:9px;color:var(--amber);bottom:${tp+1}%`;
+  ll.textContent='85';area.appendChild(ll);
+  scores.forEach((sc,i)=>{
+    const isT=i===6,hp=((sc-60)/40)*80;
+    const g=document.createElement('div');g.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;justify-content:flex-end;';
+    const n=document.createElement('div');n.style.cssText=`font-family:var(--font-data);font-size:9px;color:${sc>=85?'var(--verde)':'var(--amber)'};`;n.textContent=sc;
+    const b=document.createElement('div');b.style.cssText=`width:100%;max-width:32px;border-radius:3px 3px 0 0;transition:height 0.8s ease;height:0;background:${isT?'linear-gradient(to top,var(--verde-dim),var(--verde-bright))':sc>=85?'var(--verde-dim)':'rgba(245,166,35,0.35)'};${isT?'box-shadow:0 0 10px var(--verde-glow)':''}`;
+    const l=document.createElement('div');l.style.cssText=`font-family:var(--font-data);font-size:9px;color:${isT?'var(--verde-bright)':'var(--text-faint)'};font-weight:${isT?700:400};`;l.textContent=days[i];
+    g.appendChild(n);g.appendChild(b);g.appendChild(l);area.appendChild(g);
+    setTimeout(()=>{b.style.height=(hp/100*130)+'px';},130+i*50);
+  });
+}
+
+// ── REPORT ────────────────────────────────────────────────────────────
+function renderReport(){
+  const el=document.getElementById('monthTrend');if(!el)return;
+  const months=['Sep','Oct','Nov','Dec','Jan','Feb'];
+  const scores=[76,79,81,80,83,84];
+  const max=Math.max(...scores);
+  el.innerHTML=months.map((m,i)=>{
+    const isLast=i===months.length-1;
+    const h=(scores[i]/max)*100;
+    const c=scores[i]>=85?'var(--verde-bright)':scores[i]>=75?'var(--verde-dim)':'rgba(245,166,35,0.5)';
+    return `<div class="mt-bar">
+      <div style="font-family:var(--font-data);font-size:9px;color:${isLast?'var(--verde-bright)':'var(--text-faint)'}">${scores[i]}</div>
+      <div class="mt-b" style="height:0%;background:${c};${isLast?'box-shadow:0 0 8px var(--verde-glow)':''}"></div>
+      <div class="mt-lbl" style="color:${isLast?'var(--verde-bright)':'var(--text-faint)'};font-weight:${isLast?700:400}">${m}</div>
+    </div>`;
+  }).join('');
+  // Animate bars
+  setTimeout(()=>{
+    el.querySelectorAll('.mt-b').forEach((b,i)=>{
+      setTimeout(()=>{b.style.height=(scores[i]/max*100)+'%';},i*80);
+    });
+  },50);
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────
+function openModal(){
+  const loc=locs[curLoc];
+  document.getElementById('inHumid').value=loc.voc||312;rv('vHumid',(loc.voc||312)+' ppb');
+  document.getElementById('inTemp').value=loc.co2||680;rv('vTemp',(loc.co2||680)+' ppm');
+  document.getElementById('inSoap').value=loc.humid||61;rv('vSoap',(loc.humid||61)+'%');
+  document.getElementById('inPaper').value=loc.temp||22;rv('vPaper',(loc.temp||22)+'°C');
+  document.getElementById('inUses').value=loc.people||0;
+  document.getElementById('overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+function submitReading(){
+  const loc=locs[curLoc];
+  loc.voc=+document.getElementById('inHumid').value;
+  loc.co2=+document.getElementById('inTemp').value;
+  loc.humid=+document.getElementById('inSoap').value;
+  loc.temp=+document.getElementById('inPaper').value;
+  loc.people=+document.getElementById('inUses').value;
+  loc.threshold=+document.getElementById('inLeak').value||30;
+  let s=100;
+  // Score based on actual AirGradient ONE + Tuya PIR data
+  if((loc.voc||0)>350) s-=20; else if((loc.voc||0)>250) s-=10;
+  if((loc.co2||0)>1200) s-=15; else if((loc.co2||0)>1000) s-=7;
+  if((loc.humid||0)>86) s-=12; else if((loc.humid||0)>76) s-=5;
+  if((loc.temp||0)>30) s-=8; else if((loc.temp||0)>28) s-=3;
+  const pirTh=loc.threshold||30,pct=(loc.people||0)/pirTh;
+  if(pct>=1) s-=20; else if(pct>=0.8) s-=10;
+  loc.score=Math.max(0,Math.min(100,s));
+  loc.tier=loc.score>=90?'gold':loc.score>=75?'silver':'bronze';
+  lastFetch=new Date();updateFreshness('fresh');
+  closeModal();applyData(loc);renderAlerts();autoAlert(loc);
+  renderCertHero();
+}
+
+// ── WHATSAPP ──────────────────────────────────────────────────────────
+let waTab='alerts',waExtra=[];
+function openWA(){document.getElementById('waPanel').classList.add('open');renderWA(waTab);}
+function closeWA(){document.getElementById('waPanel').classList.remove('open');}
+function setWATab(tab){
+  waTab=tab;
+  ['alerts','staff','reports'].forEach((t2,i)=>{document.getElementById('wtab'+(i+1)).classList.toggle('active',t2===tab);});
+  renderWA(tab);
+}
+function renderWA(tab){
+  const area=document.getElementById('waMsgs');area.innerHTML='';
+  const now=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const loc=locs[curLoc];
+  if(tab==='alerts'){
+    addMsg(area,'sys',lang==='es'?'🤖 Bot activo — monitoreo en tiempo real':'🤖 Bot active — real-time monitoring');
+    addMsg(area,'in',t('waGreeting'),'09:00');
+    if(loc.soap<30)addMsg(area,'in',tmpl(loc.soap<15?'waSoapCrit':'waSoapWarn',{loc:loc.name,val:loc.soap}),now);
+    if(loc.paper<20)addMsg(area,'in',tmpl(loc.paper<10?'waPaperCrit':'waPaperWarn',{loc:loc.name,val:loc.paper}),now);
+    if(loc.humid>76)addMsg(area,'in',tmpl('waHumidWarn',{loc:loc.name,val:loc.humid}),now);
+    if(loc.leak)addMsg(area,'in',tmpl('waLeak',{loc:loc.name}),now);
+    waExtra.filter(m=>m.tab==='alerts').forEach(m=>addMsg(area,m.type,m.text,m.time));
+  }else if(tab==='staff'){
+    addMsg(area,'sys',lang==='es'?'Canal de comunicación con personal':'Staff communication channel');
+    addMsg(area,'in',tmpl('waCleanDue',{loc:loc.name,staff:loc.staff[0],time:'14:00',score:loc.score}),'13:45');
+    addMsg(area,'out',t('waStaffReply1'),'13:46');
+    addMsg(area,'in',tmpl('waCleanConf',{loc:loc.name,staff:loc.staff[0],score:Math.min(100,loc.score+8)}),'14:12');
+    waExtra.filter(m=>m.tab==='staff').forEach(m=>addMsg(area,m.type,m.text,m.time));
+  }else{
+    addMsg(area,'sys',lang==='es'?'Reportes automáticos diarios':'Automatic daily reports');
+    addMsg(area,'in',tmpl('waReport',{loc:loc.name,date:new Date().toLocaleDateString(lang==='es'?'es-AR':'en-US'),uses:'142',score:loc.score,tier:loc.tier.charAt(0).toUpperCase()+loc.tier.slice(1)}),'20:00');
+    waExtra.filter(m=>m.tab==='reports').forEach(m=>addMsg(area,m.type,m.text,m.time));
+  }
+  area.scrollTop=area.scrollHeight;
+}
+function addMsg(area,type,text,time){
+  const d=document.createElement('div');d.className='wm '+type;
+  const t2=document.createElement('div');t2.className='wm-text';t2.textContent=text;d.appendChild(t2);
+  if(type!=='sys'&&time){const tm=document.createElement('div');tm.className='wm-time';tm.innerHTML=time+(type==='out'?' <span class="wa-check">✓✓</span>':'');d.appendChild(tm);}
+  area.appendChild(d);
+}
+function sendWA(){
+  const inp=document.getElementById('waInp');
+  const text=inp.value.trim();if(!text)return;
+  const time=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  waExtra.push({tab:waTab,type:'out',text,time});inp.value='';renderWA(waTab);
+  setTimeout(()=>{
+    const replies=[t('botReply1'),t('botReply2'),t('botReply3'),t('botReply4')];
+    waExtra.push({tab:waTab,type:'in',text:replies[Math.floor(Math.random()*replies.length)],time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
+    renderWA(waTab);
+  },1100);
+}
+function sendWAAlert(key,vals){
+  const time=new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  waExtra.push({tab:'alerts',type:'in',text:tmpl(key,vals),time});
+  openWA();setWATab('alerts');showToast(tmpl(key,vals));
+}
+function doToast(key,vals){
+  const text=tmpl(key,vals);
+  waExtra.push({tab:'alerts',type:'in',text,time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
+  showToast(text);
+}
+function autoAlert(loc){
+  const voc=loc.voc||0,pir=loc.people||0,pirTh=loc.threshold||30;
+  if(pir>=pirTh) doToast('waCleanDue',{loc:loc.name,staff:loc.staff[0],time:'ahora',score:loc.score});
+  else if(voc>250) doToast('waSoapWarn',{loc:loc.name,val:voc});
+  else if((loc.humid||0)>86) doToast('waHumidWarn',{loc:loc.name,val:loc.humid});
+}
+
+// ── SETTINGS TOGGLES ─────────────────────────────────────────────────
+function toggleSetting(el){el.classList.toggle('on');}
+
+// ── TOAST ─────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(text){
+  document.getElementById('toastText').textContent=text.split('\n').slice(0,2).join(' ').substring(0,85);
+  document.getElementById('toast').classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(hideToast,6000);
+}
+function hideToast(){document.getElementById('toast').classList.remove('show');}
+
+// ── DEMO SIMULATION ───────────────────────────────────────────────────
+setInterval(()=>{
+  if(liveMode)return;
+  const loc=locs[curLoc];
+  // Simulate AirGradient ONE VOC fluctuations
+  if(loc.voc !== undefined){
+    loc.voc = Math.max(80, Math.round(loc.voc + (Math.random()-0.45)*7));
+    const vocEl=document.getElementById('scVoc');
+    const vocBar=document.getElementById('bVoc');
+    const vocCard=document.getElementById('scVocCard');
+    const vocIco=document.getElementById('vocIco');
+    const vocStatus=document.getElementById('ss1');
+    if(vocEl) vocEl.innerHTML=loc.voc+'<span class="u"> ppb</span>';
+    if(vocBar) vocBar.style.width=Math.min(100,(loc.voc/500*100)).toFixed(0)+'%';
+    const vocWarn = loc.voc > 250;
+    if(vocCard) vocCard.className='sc '+(vocWarn?'warn':'ok');
+    if(vocIco) vocIco.textContent=vocWarn?'⚠':'✓';
+    if(vocStatus) vocStatus.textContent=vocWarn?'Elevado · umbral 250 ppb':'Normal';
+    if(vocBar) vocBar.className='sbar-fill '+(vocWarn?'warn':'ok');
+    if(vocWarn && loc.voc===251) doToast('waSoapWarn',{loc:loc.name,val:loc.voc});
+  }
+  // Simulate PIR counter
+  if(loc.people !== undefined && Math.random() > 0.85){
+    loc.people = Math.min((loc.threshold||30)+5, loc.people+1);
+    const pirEl=document.getElementById('scPir');
+    const pirBar=document.getElementById('bPir');
+    if(pirEl) pirEl.innerHTML=loc.people+'<span class="u"> / '+(loc.threshold||30)+'</span>';
+    if(pirBar) pirBar.style.width=Math.min(100,(loc.people/(loc.threshold||30)*100)).toFixed(0)+'%';
+    const kpiPir=document.getElementById('kpiPir');
+    if(kpiPir) kpiPir.textContent=loc.people+' / '+(loc.threshold||30);
+    if(loc.people>=(loc.threshold||30)){doToast('waCleanDue',{loc:loc.name,staff:loc.staff[0],time:'ahora',score:loc.score});renderAlerts();}
+  }
+  // CO2 slight fluctuation
+  if(loc.co2 !== undefined){
+    loc.co2 = Math.max(400, Math.round(loc.co2+(Math.random()-0.5)*12));
+    const co2El=document.getElementById('scCo2');
+    if(co2El) co2El.innerHTML=loc.co2+'<span class="u"> ppm</span>';
+  }
+},4000);
+
+// ── INIT ──────────────────────────────────────────────────────────────
+applyData(locs[0]);renderAlerts();
+</script>
+</body>
+</html>

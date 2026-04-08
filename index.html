@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aiwanago — Higiene Inteligente para Espacios Comerciales</title>
+<meta name="description" content="Plataforma IoT de higiene inteligente. Sensores en tiempo real, alertas automáticas y certificación por score para baños comerciales.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── BRAND TOKENS ───────────────────────────── */
+:root {
+  --verde:       #12b796;   /* Pantone 339 C */
+  --verde-light: #1dd4ae;
+  --verde-dim:   rgba(18,183,150,0.12);
+  --verde-glow:  rgba(18,183,150,0.22);
+  --celeste:     #6dccdf;   /* Pantone 310 C */
+  --celeste-dim: rgba(109,204,223,0.12);
+  --negro:       #000000;   /* Pantone Black 6 C */
+
+  /* surfaces */
+  --bg:      #07100E;
+  --bg2:     #0C1816;
+  --surface: #111F1C;
+  --surface2:#172824;
+  --border:  rgba(18,183,150,0.14);
+  --border2: rgba(255,255,255,0.055);
+
+  /* text */
+  --text:    #DFF0EA;
+  --muted:   #6B9088;
+  --faint:   #2E4D47;
+
+  /* status */
+  --amber: #F5A623;
+  --green: #22C55E;
+  --red:   #E85D5D;
+
+  /* type */
+  --sans: 'Raleway', sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* subtle diagonal line texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 60px,
+    rgba(18,183,150,0.018) 60px,
+    rgba(18,183,150,0.018) 61px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── NAV ─────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 56px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s, background 0.3s;
+}
+nav.scrolled {
+  background: rgba(7,16,14,0.94);
+  backdrop-filter: blur(12px);
+  border-color: var(--border);
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.logo-mark {
+  width: 32px; height: 32px;
+  background: var(--verde);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark svg { width: 16px; height: 16px; fill: #fff; }
+.logo-name {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px; font-weight: 400;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.2px;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  font-family: var(--sans) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: #fff !important;
+  background: var(--verde);
+  padding: 9px 22px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.2s !important;
+  letter-spacing: 0.3px;
+}
+.nav-cta:hover { opacity: 0.85; }
+
+/* ── HERO ─────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 56px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* large verde orb, right side */
+.hero-orb {
+  position: absolute;
+  width: 780px; height: 780px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    rgba(18,183,150,0.13) 0%,
+    rgba(18,183,150,0.04) 45%,
+    transparent 70%);
+  right: -220px; top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+/* celeste secondary orb */
+.hero-orb2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    rgba(109,204,223,0.07) 0%,
+    transparent 70%);
+  right: 120px; top: 20%;
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 80px;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--verde-dim);
+  border: 1px solid rgba(18,183,150,0.28);
+  border-radius: 100px;
+  padding: 6px 14px 6px 8px;
+  margin-bottom: 28px;
+}
+.badge-pulse {
+  width: 8px; height: 8px;
+  background: var(--verde);
+  border-radius: 50%;
+  animation: badgepulse 2s ease-in-out infinite;
+}
+@keyframes badgepulse {
+  0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(18,183,150,0.5); }
+  50% { opacity:0.7; box-shadow: 0 0 0 5px rgba(18,183,150,0); }
+}
+.badge-text {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--verde-light);
+  letter-spacing: 0.5px;
+}
+
+h1 {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: clamp(40px, 5.5vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -2.5px;
+  color: #fff;
+  margin-bottom: 24px;
+}
+h1 em {
+  font-style: normal;
+  color: var(--verde);
+}
+h1 .celeste { color: var(--celeste); }
+
+.hero-sub {
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex; align-items: center; gap: 20px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--verde);
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--verde-light); transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--muted);
+  font-size: 14px; font-weight: 400;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.btn-secondary:hover { color: var(--text); }
+
+.hero-stats {
+  display: flex; gap: 40px;
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border2);
+}
+.stat-val {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 30px;
+  color: #fff;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-val span { color: var(--verde); }
+.stat-lbl {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* ── HERO PANEL (right) ──────────────────────── */
+.hero-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+}
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  inset: -1px; border-radius: 20px;
+  background: linear-gradient(135deg, rgba(18,183,150,0.2), transparent 50%);
+  z-index: -1;
+}
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.panel-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.live-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--green);
+}
+.live-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: badgepulse 1.8s infinite;
+}
+
+/* score ring */
+.score-wrap {
+  display: flex; align-items: center; gap: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border2);
+}
+.ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.ring-wrap svg { transform: rotate(-90deg); }
+.ring-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.ring-score {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 22px;
+  color: #fff;
+  line-height: 1;
+}
+.ring-tier {
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--celeste);
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+.score-info { flex: 1; }
+.score-loc {
+  font-size: 13px; font-weight: 700; color: #fff;
+  margin-bottom: 3px;
+}
+.score-detail {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* sensor metrics 2x2 */
+.panel-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.pm {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.pm-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+.pm-value {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  line-height: 1;
+}
+.pm-value.warn { color: var(--amber); }
+.pm-value.ok { color: var(--verde); }
+.pm-unit { font-size: 10px; font-weight: 300; color: var(--muted); }
+
+/* alert row */
+.panel-alert {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(245,166,35,0.06);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.alert-icon { font-size: 16px; flex-shrink: 0; }
+
+/* ── SECTION BASE ────────────────────────────── */
+.section {
+  padding: 110px 56px;
+  position: relative; z-index: 1;
+}
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.overline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--verde);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  display: block;
+}
+h2 {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: clamp(28px, 3.5vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.section-body {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 540px;
+}
+
+/* ── PROBLEM ─────────────────────────────────── */
+.problem {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.pain-list { margin-top: 32px; list-style: none; }
+.pain-item {
+  display: flex; gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border2);
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.6;
+}
+.pain-item:last-child { border-bottom: none; }
+.pain-item::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--faint);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.pain-item.highlighted { color: var(--text); }
+.pain-item.highlighted::before { background: var(--verde); }
+
+/* cost visual */
+.cost-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin-top: 8px;
+}
+.cost-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.cost-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border2);
+  font-size: 13px;
+}
+.cost-row:last-child { border-bottom: none; }
+.cost-label { color: var(--muted); }
+.cost-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+.cost-val.bad { color: var(--red); }
+.cost-val.good { color: var(--verde); }
+
+/* ── HOW IT WORKS ────────────────────────────── */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 56px;
+  background: var(--border2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.step {
+  background: var(--bg);
+  padding: 36px 32px;
+  position: relative;
+}
+.step-num {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 56px;
+  color: var(--faint);
+  letter-spacing: -3px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.step-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: -0.4px;
+  margin-bottom: 10px;
+}
+.step-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+.step-tags {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-top: 20px;
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--verde-dim);
+  border: 1px solid rgba(18,183,150,0.2);
+  color: var(--verde-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.tag.cel {
+  background: var(--celeste-dim);
+  border-color: rgba(109,204,223,0.2);
+  color: var(--celeste);
+}
+.step-connector {
+  position: absolute;
+  right: -18px; top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  background: var(--verde);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  z-index: 2;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── CERT TIERS ──────────────────────────────── */
+.cert-section {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 52px;
+}
+.tier {
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.tier:hover { transform: translateY(-2px); }
+.tier.featured {
+  border-color: var(--verde);
+  background: var(--verde-dim);
+}
+.tier.featured::after {
+  content: 'Estándar objetivo';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  background: var(--verde);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 0 0 8px 8px;
+}
+.tier-medal { font-size: 40px; margin-bottom: 14px; display: block; }
+.tier-name {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 22px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.tier-range {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.tier-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* score bar visual */
+.tier-bar {
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+.tier-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--verde);
+  transition: width 1.2s ease;
+}
+.tier.bronze-tier .tier-bar-fill { background: #C4845A; width: 55%; }
+.tier.silver-tier .tier-bar-fill { background: var(--celeste); width: 82%; }
+.tier.gold-tier .tier-bar-fill { background: #D4A843; width: 96%; }
+
+/* ── PILOT ───────────────────────────────────── */
+.pilot-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px;
+}
+.kpi-val {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 38px;
+  color: var(--verde);
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.kpi-lbl {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* hardware list */
+.hw-list { list-style: none; margin-top: 36px; }
+.hw-item {
+  display: flex; gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border2);
+  align-items: flex-start;
+}
+.hw-item:last-child { border-bottom: none; }
+.hw-icon {
+  width: 36px; height: 36px;
+  background: var(--verde-dim);
+  border: 1px solid rgba(18,183,150,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.hw-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.hw-detail {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.hw-price {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--verde);
+  font-weight: 500;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+.hw-free { color: var(--celeste); }
+
+/* ── CLIENTS ─────────────────────────────────── */
+.clients-section {
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-bottom: 1px solid var(--border2);
+}
+.client-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 52px;
+}
+.client-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex; flex-direction: column;
+  gap: 16px;
+}
+.client-card.placeholder {
+  border-style: dashed;
+  border-color: var(--faint);
+  background: none;
+  opacity: 0.5;
+}
+.client-icon {
+  width: 48px; height: 48px;
+  background: var(--verde-dim);
+  border: 1px solid rgba(18,183,150,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.client-name {
+  font-weight: 700; font-size: 15px; color: #fff;
+  margin-bottom: 2px;
+}
+.client-detail {
+  font-size: 12px; color: var(--muted);
+}
+.client-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  background: var(--verde-dim);
+  border: 1px solid rgba(18,183,150,0.25);
+  color: var(--verde-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.client-metrics {
+  display: flex; gap: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border2);
+}
+.cm-val {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--celeste);
+  letter-spacing: -0.5px;
+}
+.cm-lbl { font-size: 10px; color: var(--muted); }
+
+/* ── CTA ─────────────────────────────────────── */
+.cta-section {
+  text-align: center;
+}
+.cta-inner {
+  max-width: 680px; margin: 0 auto;
+}
+.cta-section h2 { margin-bottom: 16px; }
+.cta-body {
+  font-size: 16px; color: var(--muted);
+  font-weight: 300; line-height: 1.8;
+  margin-bottom: 40px;
+}
+.cta-actions {
+  display: flex; align-items: center;
+  justify-content: center; gap: 20px;
+  flex-wrap: wrap;
+}
+.cta-note {
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+  letter-spacing: 0.3px;
+}
+
+/* ── FOOTER ──────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border2);
+  padding: 32px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 1;
+}
+.footer-logo {
+  font-family: var(--sans);
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--muted);
+  letter-spacing: -0.3px;
+}
+.footer-right {
+  display: flex; align-items: center; gap: 32px;
+}
+.footer-link {
+  font-size: 12px; color: var(--faint);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-link:hover { color: var(--muted); }
+
+/* ── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeup {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-badge  { animation: fadeup 0.6s ease both; }
+h1           { animation: fadeup 0.6s 0.1s ease both; }
+.hero-sub    { animation: fadeup 0.6s 0.2s ease both; }
+.hero-actions{ animation: fadeup 0.6s 0.3s ease both; }
+.hero-stats  { animation: fadeup 0.6s 0.4s ease both; }
+.hero-panel  { animation: fadeup 0.7s 0.25s ease both; }
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1100px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-panel { display: none; }
+  .problem-grid { grid-template-columns: 1fr; gap: 40px; }
+  .pilot-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .hero { padding: 100px 24px 64px; }
+  .section { padding: 72px 24px; }
+  footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+  .steps { grid-template-columns: 1fr; }
+  .tiers { grid-template-columns: 1fr; }
+  .client-cards { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .nav-links li:not(:last-child) { display: none; }
+  .hero-stats { gap: 20px; flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  h1 { letter-spacing: -1.5px; }
+  .kpis { grid-template-columns: 1fr; }
+  .footer-right { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ─────────────────────────────────── -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16"><path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z"/></svg>
+    </div>
+    <span class="logo-name">aiwanago</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#certificacion">Certificación</a></li>
+    <li><a href="#piloto">Piloto</a></li>
+    <li><a href="#contacto" class="nav-cta">Solicitar piloto →</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-orb2"></div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="badge-pulse"></div>
+        <span class="badge-text">IoT · Higiene Inteligente · Buenos Aires</span>
+      </div>
+
+      <h1>Baños que<br>se gestionan<br><em>solos.</em></h1>
+
+      <p class="hero-sub">
+        Sensores en tiempo real, alertas automáticas al personal y un score de higiene certificado. Transformamos la gestión reactiva en un sistema inteligente.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#contacto" class="btn-primary">
+          Solicitar piloto gratuito →
+        </a>
+        <a href="#como-funciona" class="btn-secondary">
+          Ver cómo funciona ↓
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <div class="stat-val">60<span>d</span></div>
+          <div class="stat-lbl">piloto sin costo</div>
+        </div>
+        <div>
+          <div class="stat-val">6</div>
+          <div class="stat-lbl">métricas en tiempo real</div>
+        </div>
+        <div>
+          <div class="stat-val">24<span>/7</span></div>
+          <div class="stat-lbl">monitoreo continuo</div>
+        </div>
+        <div>
+          <div class="stat-val">$<span>0</span></div>
+          <div class="stat-lbl">inversión en el piloto</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live panel -->
+    <div class="hero-panel">
+      <div class="panel-header">
+        <div class="panel-title">Dashboard en vivo</div>
+        <div class="live-pill"><div class="live-dot"></div> LIVE</div>
+      </div>
+
+      <div class="score-wrap">
+        <div class="ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+            <circle id="scoreRing" cx="40" cy="40" r="32" fill="none"
+              stroke="#12b796" stroke-width="6" stroke-linecap="round"
+              stroke-dasharray="201" stroke-dashoffset="50"/>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-score" id="panelScore">84</div>
+            <div class="ring-tier">SILVER</div>
+          </div>
+        </div>
+        <div class="score-info">
+          <div class="score-loc">Abasto Shopping</div>
+          <div class="score-detail">
+            Planta Baja<br>
+            Última limpieza: hace 1h 45min<br>
+            Sensor: AirGradient ONE
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-metrics">
+        <div class="pm">
+          <div class="pm-label">VOC</div>
+          <div class="pm-value warn" id="pmVoc">312 <span class="pm-unit">ppb</span></div>
+        </div>
+        <div class="pm">
+          <div class="pm-label">CO₂</div>
+          <div class="pm-value ok" id="pmCo2">680 <span class="pm-unit">ppm</span></div>
+        </div>
+        <div class="pm">
+          <div class="pm-label">Humedad</div>
+          <div class="pm-value ok" id="pmHum">61 <span class="pm-unit">%</span></div>
+        </div>
+        <div class="pm">
+          <div class="pm-label">Ingresos / PIR</div>
+          <div class="pm-value warn" id="pmPir">23 <span class="pm-unit">/ 30</span></div>
+        </div>
+      </div>
+
+      <div class="panel-alert">
+        <span class="alert-icon">⚠️</span>
+        <div>VOC elevado por 8 min · WhatsApp enviado al personal</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROBLEMA ──────────────────────────────── -->
+<section class="section problem" id="problema">
+  <div class="section-inner">
+    <div class="problem-grid">
+      <div>
+        <span class="overline">El problema</span>
+        <h2>La limpieza reactiva ya no alcanza</h2>
+        <p class="section-body">
+          Los espacios comerciales limpian sus baños por horario fijo, sin importar el tráfico real ni la calidad del aire. El resultado es el peor de los dos mundos: intervenciones innecesarias y baños sucios cuando más importa.
+        </p>
+        <ul class="pain-list">
+          <li class="pain-item highlighted">Personal interviene sin necesidad — o demasiado tarde</li>
+          <li class="pain-item">Sin trazabilidad de cuándo se limpió ni quién lo hizo</li>
+          <li class="pain-item highlighted">Calidad de aire degradada sin que nadie lo detecte</li>
+          <li class="pain-item">Sin datos para demostrar el estándar a clientes e inversores</li>
+          <li class="pain-item">Gestión 100% manual y dependiente de supervisión presencial</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="cost-card">
+          <div class="cost-title">Gestión tradicional vs. Aiwanago</div>
+          <div class="cost-row">
+            <span class="cost-label">Limpiezas innecesarias</span>
+            <span class="cost-val bad">−15 a 25%</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Tiempo de respuesta</span>
+            <span class="cost-val bad">Sin límite</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Trazabilidad de limpiezas</span>
+            <span class="cost-val bad">0%</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Detección de aire degradado</span>
+            <span class="cost-val bad">Nunca</span>
+          </div>
+          <div style="height:1px; background:var(--border); margin:8px 0"></div>
+          <div class="cost-row">
+            <span class="cost-label">Con Aiwanago — respuesta</span>
+            <span class="cost-val good">&lt; 30 min</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Trazabilidad</span>
+            <span class="cost-val good">100%</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">Intervenciones ajustadas</span>
+            <span class="cost-val good">Solo cuando hace falta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CÓMO FUNCIONA ──────────────────────────── -->
+<section class="section" id="como-funciona">
+  <div class="section-inner">
+    <span class="overline">Cómo funciona</span>
+    <h2>Tres capas.<br>Un sistema inteligente.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Sensores en el baño</div>
+        <p class="step-desc">El AirGradient ONE mide calidad de aire en tiempo real. El sensor PIR Tuya cuenta cada ingreso. Todo vía WiFi — sin hub, sin cableado, sin obras.</p>
+        <div class="step-tags">
+          <span class="tag">VOC</span>
+          <span class="tag">CO₂</span>
+          <span class="tag">PM2.5</span>
+          <span class="tag">Humedad</span>
+          <span class="tag">Temp</span>
+          <span class="tag">NOx</span>
+          <span class="tag cel">Conteo de uso</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Alertas automáticas</div>
+        <p class="step-desc">Cuando el VOC supera el umbral calibrado por 10 minutos, o el contador de ingresos alcanza el límite, Make.com dispara un WhatsApp al personal. Sin apps extra, sin capacitación compleja.</p>
+        <div class="step-tags">
+          <span class="tag cel">WhatsApp</span>
+          <span class="tag cel">Make.com</span>
+          <span class="tag cel">Confirmación por chat</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Score y certificación</div>
+        <p class="step-desc">Aiwanago calcula un score de 0 a 100 que refleja la calidad real del baño en todo momento. Bronze, Silver o Gold — un indicador que puede mostrarse a clientes y usarse en auditorías.</p>
+        <div class="step-tags">
+          <span class="tag">Bronze 0–74</span>
+          <span class="tag">Silver 75–89</span>
+          <span class="tag">Gold 90–100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CERTIFICACIÓN ──────────────────────────── -->
+<section class="section cert-section" id="certificacion">
+  <div class="section-inner">
+    <span class="overline">Certificación Aiwanago</span>
+    <h2>El primer score de higiene basado en datos reales.</h2>
+    <p class="section-body">No en inspecciones visuales subjetivas. No en horarios fijos. En sensores que miden lo que realmente importa, 24 horas al día.</p>
+
+    <div class="tiers">
+      <div class="tier bronze-tier">
+        <span class="tier-medal">🥉</span>
+        <div class="tier-name">Bronze</div>
+        <div class="tier-range">0 — 74 puntos</div>
+        <p class="tier-desc">Higiene básica con oportunidades de mejora. Punto de partida del proceso de optimización.</p>
+        <div class="tier-bar"><div class="tier-bar-fill"></div></div>
+      </div>
+
+      <div class="tier silver-tier featured">
+        <span class="tier-medal">🥈</span>
+        <div class="tier-name">Silver</div>
+        <div class="tier-range">75 — 89 puntos</div>
+        <p class="tier-desc">Estándar profesional. Respuesta eficiente, calidad de aire controlada y trazabilidad completa de cada intervención.</p>
+        <div class="tier-bar"><div class="tier-bar-fill"></div></div>
+      </div>
+
+      <div class="tier gold-tier">
+        <span class="tier-medal">🥇</span>
+        <div class="tier-name">Gold</div>
+        <div class="tier-range">90 — 100 puntos</div>
+        <p class="tier-desc">Excelencia en higiene. El más alto estándar Aiwanago — diferenciador real para espacios premium.</p>
+        <div class="tier-bar"><div class="tier-bar-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PILOTO ─────────────────────────────────── -->
+<section class="section" id="piloto">
+  <div class="section-inner">
+    <div class="pilot-inner">
+      <div>
+        <span class="overline">Piloto gratuito</span>
+        <h2>Sin inversión.<br>Sin riesgo.<br>Solo resultados.</h2>
+        <p class="section-body">Instalamos los sensores, configuramos todo el sistema y operamos durante 60 días activos completamente sin costo. Al finalizar, tenés datos reales para decidir.</p>
+
+        <div class="kpis">
+          <div class="kpi-card">
+            <div class="kpi-val">2</div>
+            <div class="kpi-lbl">baños monitoreados</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">60</div>
+            <div class="kpi-lbl">días de operación activa</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">$0</div>
+            <div class="kpi-lbl">costo para el cliente</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">24/7</div>
+            <div class="kpi-lbl">monitoreo continuo</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="cost-card">
+          <div class="cost-title">Hardware del piloto</div>
+          <ul class="hw-list">
+            <li class="hw-item">
+              <div class="hw-icon">🌡️</div>
+              <div>
+                <div class="hw-name">AirGradient ONE</div>
+                <div class="hw-detail">VOC · CO₂ · PM2.5 · Humedad · Temp · NOx<br>WiFi nativo · API abierta · Sin hub</div>
+              </div>
+              <div class="hw-price">~$138</div>
+            </li>
+            <li class="hw-item">
+              <div class="hw-icon">👁️</div>
+              <div>
+                <div class="hw-name">Tuya WiFi PIR</div>
+                <div class="hw-detail">Conteo de ingresos · 120° cobertura<br>Montaje en esquina a 2–3m · USB</div>
+              </div>
+              <div class="hw-price">~$12</div>
+            </li>
+            <li class="hw-item">
+              <div class="hw-icon">⚡</div>
+              <div>
+                <div class="hw-name">Make.com + CallMeBot</div>
+                <div class="hw-detail">Automatización · WhatsApp al personal<br>Alertas y confirmaciones</div>
+              </div>
+              <div class="hw-price hw-free">Gratis</div>
+            </li>
+            <li class="hw-item">
+              <div class="hw-icon">📊</div>
+              <div>
+                <div class="hw-name">Dashboard Aiwanago</div>
+                <div class="hw-detail">Score en tiempo real · Historial · Alertas<br>Reportes mensuales automáticos</div>
+              </div>
+              <div class="hw-price hw-free">Incluido</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLIENTES ───────────────────────────────── -->
+<section class="section clients-section">
+  <div class="section-inner">
+    <span class="overline">Pilotos en curso</span>
+    <h2>Espacios que confían en Aiwanago</h2>
+
+    <div class="client-cards">
+      <div class="client-card">
+        <div class="client-icon">🏟️</div>
+        <div>
+          <div class="client-name">Club Atlético River Plate</div>
+          <div class="client-detail">Estadio Monumental · Buenos Aires</div>
+          <div class="client-badge">PILOTO ACTIVO</div>
+        </div>
+        <div class="client-metrics">
+          <div>
+            <div class="cm-val">91</div>
+            <div class="cm-lbl">Score Gold</div>
+          </div>
+          <div>
+            <div class="cm-val">2</div>
+            <div class="cm-lbl">baños</div>
+          </div>
+          <div>
+            <div class="cm-val">24/7</div>
+            <div class="cm-lbl">monitoreo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="client-card">
+        <div class="client-icon">🛍️</div>
+        <div>
+          <div class="client-name">IRSA Propiedades Comerciales</div>
+          <div class="client-detail">Abasto Shopping · Buenos Aires</div>
+          <div class="client-badge">PILOTO ACTIVO</div>
+        </div>
+        <div class="client-metrics">
+          <div>
+            <div class="cm-val">84</div>
+            <div class="cm-lbl">Score Silver</div>
+          </div>
+          <div>
+            <div class="cm-val">2</div>
+            <div class="cm-lbl">baños</div>
+          </div>
+          <div>
+            <div class="cm-val">60d</div>
+            <div class="cm-lbl">piloto</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="client-card placeholder">
+        <div class="client-icon">✦</div>
+        <div>
+          <div class="client-name">Tu espacio aquí</div>
+          <div class="client-detail">Malls · Estadios · Aeropuertos · Hospitales</div>
+        </div>
+        <div class="client-metrics">
+          <div>
+            <div class="cm-val">—</div>
+            <div class="cm-lbl">Score</div>
+          </div>
+          <div>
+            <div class="cm-val">$0</div>
+            <div class="cm-lbl">inversión</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────── -->
+<section class="section cta-section" id="contacto">
+  <div class="section-inner">
+    <div class="cta-inner">
+      <span class="overline">Empezá hoy</span>
+      <h2>Solicitá tu piloto gratuito</h2>
+      <p class="cta-body">
+        Contanos sobre tu espacio y te preparamos una propuesta en 48 horas. El piloto incluye instalación, configuración, 5 días de calibración y 60 días de operación activa — todo sin costo.
+      </p>
+      <div class="cta-actions">
+        <a href="mailto:hola@aiwanago.com" class="btn-primary">
+          Escribinos →
+        </a>
+        <a href="mailto:hola@aiwanago.com" class="btn-secondary">
+          hola@aiwanago.com
+        </a>
+      </div>
+      <p class="cta-note">Sin compromiso · Sin inversión · 60 días de datos reales</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer>
+  <div class="footer-logo">aiwanago</div>
+  <div class="footer-right">
+    <a href="#como-funciona" class="footer-link">Cómo funciona</a>
+    <a href="#certificacion" class="footer-link">Certificación</a>
+    <a href="#contacto" class="footer-link">Contacto</a>
+    <span class="footer-link">Documento confidencial · 2026</span>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// Live panel animation
+function animatePanel() {
+  const voc  = 285 + Math.round(Math.random() * 65);
+  const co2  = 620 + Math.round(Math.random() * 100);
+  const hum  = 58  + Math.round(Math.random() * 8);
+  const pir  = 20  + Math.round(Math.random() * 9);
+  const score= 80  + Math.round(Math.random() * 12);
+
+  const setEl = (id, val, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = val;
+    if (cls) el.className = `pm-value ${cls}`;
+  };
+
+  setEl('pmVoc',  `${voc} <span class="pm-unit">ppb</span>`,  voc > 250 ? 'warn' : 'ok');
+  setEl('pmCo2',  `${co2} <span class="pm-unit">ppm</span>`,  co2 > 1000 ? 'warn' : 'ok');
+  setEl('pmHum',  `${hum} <span class="pm-unit">%</span>`,    'ok');
+  setEl('pmPir',  `${pir} <span class="pm-unit">/ 30</span>`, pir >= 27 ? 'warn' : 'ok');
+
+  const el = document.getElementById('panelScore');
+  if (el) el.textContent = score;
+
+  // Update ring
+  const ring = document.getElementById('scoreRing');
+  if (ring) {
+    const offset = 201 - (score / 100) * 201;
+    ring.setAttribute('stroke-dashoffset', offset.toFixed(1));
+    ring.setAttribute('stroke', score >= 90 ? '#D4A843' : score >= 75 ? '#12b796' : '#C4845A');
+  }
+}
+setInterval(animatePanel, 3500);
+
+// Intersection observer for subtle reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.style.opacity = '1';
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.step, .tier, .client-card, .kpi-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transition = 'opacity 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
