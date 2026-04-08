@@ -921,7 +921,14 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
     <li><a href="#como-funciona">Cómo funciona</a></li>
     <li><a href="#certificacion">Certificación</a></li>
     <li><a href="#piloto">Piloto</a></li>
-    <li><a href="#contacto" class="nav-cta">Solicitar piloto →</a></li>
+    <li><a href="#contacto" class="nav-cta" id="nav-cta">Solicitar demo →</a></li>
+    <li>
+      <button onclick="toggleLang()" id="lang-btn" style="
+        background:none;border:1px solid rgba(18,183,150,0.3);color:var(--muted);
+        font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:6px;
+        cursor:pointer;letter-spacing:1px;transition:all 0.2s;
+      " onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">EN</button>
+    </li>
   </ul>
 </nav>
 
@@ -934,7 +941,7 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
     <div class="hero-content">
       <div class="hero-badge">
         <div class="badge-pulse"></div>
-        <span class="badge-text">IoT · Higiene Inteligente · Buenos Aires</span>
+        <span class="badge-text">IoT · Hygiene Intelligence Platform</span>
       </div>
 
       <h1>Baños que<br>se gestionan<br><em>solos.</em></h1>
@@ -945,7 +952,7 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
 
       <div class="hero-actions">
         <a href="#contacto" class="btn-primary">
-          Solicitar piloto gratuito →
+          Solicitar demo →
         </a>
         <a href="#como-funciona" class="btn-secondary">
           Ver cómo funciona ↓
@@ -953,10 +960,6 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
       </div>
 
       <div class="hero-stats">
-        <div>
-          <div class="stat-val">60<span>d</span></div>
-          <div class="stat-lbl">piloto sin costo</div>
-        </div>
         <div>
           <div class="stat-val">6</div>
           <div class="stat-lbl">métricas en tiempo real</div>
@@ -966,8 +969,12 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
           <div class="stat-lbl">monitoreo continuo</div>
         </div>
         <div>
-          <div class="stat-val">$<span>0</span></div>
-          <div class="stat-lbl">inversión en el piloto</div>
+          <div class="stat-val">60<span>d</span></div>
+          <div class="stat-lbl">datos de operación</div>
+        </div>
+        <div>
+          <div class="stat-val">3</div>
+          <div class="stat-lbl">niveles de certificación</div>
         </div>
       </div>
     </div>
@@ -993,9 +1000,9 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
           </div>
         </div>
         <div class="score-info">
-          <div class="score-loc">Abasto Shopping</div>
-          <div class="score-detail">
-            Planta Baja<br>
+          <div class="score-loc">Shopping Center</div>
+          <div class="score-detail" id="panel-detail">
+            Baño principal<br>
             Última limpieza: hace 1h 45min<br>
             Sensor: AirGradient ONE
           </div>
@@ -1173,9 +1180,9 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
   <div class="section-inner">
     <div class="pilot-inner">
       <div>
-        <span class="overline">Piloto gratuito</span>
-        <h2>Sin inversión.<br>Sin riesgo.<br>Solo resultados.</h2>
-        <p class="section-body">Instalamos los sensores, configuramos todo el sistema y operamos durante 60 días activos completamente sin costo. Al finalizar, tenés datos reales para decidir.</p>
+        <span class="overline">Implementación</span>
+        <h2>Instalación simple.<br>Resultados desde<br>el día uno.</h2>
+        <p class="section-body">Instalamos los sensores, configuramos el sistema y operamos el monitoreo completo. En 60 días tenés datos reales para medir el impacto en tu operación.</p>
 
         <div class="kpis">
           <div class="kpi-card">
@@ -1187,8 +1194,8 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
             <div class="kpi-lbl">días de operación activa</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-val">$0</div>
-            <div class="kpi-lbl">costo para el cliente</div>
+            <div class="kpi-val">3</div>
+            <div class="kpi-lbl">niveles de certificación</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-val">24/7</div>
@@ -1240,98 +1247,26 @@ h1           { animation: fadeup 0.6s 0.1s ease both; }
   </div>
 </section>
 
-<!-- ── CLIENTES ───────────────────────────────── -->
-<section class="section clients-section">
-  <div class="section-inner">
-    <span class="overline">Pilotos en curso</span>
-    <h2>Espacios que confían en Aiwanago</h2>
 
-    <div class="client-cards">
-      <div class="client-card">
-        <div class="client-icon">🏟️</div>
-        <div>
-          <div class="client-name">Club Atlético River Plate</div>
-          <div class="client-detail">Estadio Monumental · Buenos Aires</div>
-          <div class="client-badge">PILOTO ACTIVO</div>
-        </div>
-        <div class="client-metrics">
-          <div>
-            <div class="cm-val">91</div>
-            <div class="cm-lbl">Score Gold</div>
-          </div>
-          <div>
-            <div class="cm-val">2</div>
-            <div class="cm-lbl">baños</div>
-          </div>
-          <div>
-            <div class="cm-val">24/7</div>
-            <div class="cm-lbl">monitoreo</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="client-card">
-        <div class="client-icon">🛍️</div>
-        <div>
-          <div class="client-name">IRSA Propiedades Comerciales</div>
-          <div class="client-detail">Abasto Shopping · Buenos Aires</div>
-          <div class="client-badge">PILOTO ACTIVO</div>
-        </div>
-        <div class="client-metrics">
-          <div>
-            <div class="cm-val">84</div>
-            <div class="cm-lbl">Score Silver</div>
-          </div>
-          <div>
-            <div class="cm-val">2</div>
-            <div class="cm-lbl">baños</div>
-          </div>
-          <div>
-            <div class="cm-val">60d</div>
-            <div class="cm-lbl">piloto</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="client-card placeholder">
-        <div class="client-icon">✦</div>
-        <div>
-          <div class="client-name">Tu espacio aquí</div>
-          <div class="client-detail">Malls · Estadios · Aeropuertos · Hospitales</div>
-        </div>
-        <div class="client-metrics">
-          <div>
-            <div class="cm-val">—</div>
-            <div class="cm-lbl">Score</div>
-          </div>
-          <div>
-            <div class="cm-val">$0</div>
-            <div class="cm-lbl">inversión</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ── CTA ───────────────────────────────────── -->
 <section class="section cta-section" id="contacto">
   <div class="section-inner">
     <div class="cta-inner">
-      <span class="overline">Empezá hoy</span>
-      <h2>Solicitá tu piloto gratuito</h2>
-      <p class="cta-body">
-        Contanos sobre tu espacio y te preparamos una propuesta en 48 horas. El piloto incluye instalación, configuración, 5 días de calibración y 60 días de operación activa — todo sin costo.
+      <span class="overline" id="cta-overline">Empezá hoy</span>
+      <h2 id="cta-h2">Hablemos de tu espacio</h2>
+      <p class="cta-body" id="cta-body">
+        Contanos sobre tu operación y analizamos juntos cómo Aiwanago puede transformar la gestión de higiene de tu espacio comercial.
       </p>
       <div class="cta-actions">
-        <a href="mailto:hola@aiwanago.com" class="btn-primary">
+        <a href="mailto:hola@aiwanago.com" class="btn-primary" id="cta-btn">
           Escribinos →
         </a>
         <a href="mailto:hola@aiwanago.com" class="btn-secondary">
           hola@aiwanago.com
         </a>
       </div>
-      <p class="cta-note">Sin compromiso · Sin inversión · 60 días de datos reales</p>
+      <p class="cta-note" id="cta-note">Espacios comerciales · Estadios · Aeropuertos · Hospitales · Oficinas</p>
     </div>
   </div>
 </section>
@@ -1406,6 +1341,151 @@ document.querySelectorAll('.step, .tier, .client-card, .kpi-card').forEach(el =>
   el.style.transition = 'opacity 0.5s ease';
   observer.observe(el);
 });
+
+// ── LANGUAGE SWITCHER ─────────────────────────────────────
+const COPY = {
+  es: {
+    badge: 'IoT · Hygiene Intelligence Platform',
+    h1a: 'Baños que', h1b: 'se gestionan', h1c: 'solos.',
+    sub: 'Sensores en tiempo real, alertas automáticas al personal y un score de higiene certificado. Transformamos la gestión reactiva en un sistema inteligente.',
+    cta1: 'Solicitar demo →', cta2: 'Ver cómo funciona ↓',
+    stat1v: '6',   stat1l: 'métricas en tiempo real',
+    stat2v: '24',  stat2l: 'monitoreo continuo',
+    stat3v: '60',  stat3l: 'datos de operación',
+    stat4v: '3',   stat4l: 'niveles de certificación',
+    navCta: 'Solicitar demo →', langBtn: 'EN',
+    probOver: 'El problema', probH2: 'La limpieza reactiva ya no alcanza',
+    probBody: 'Los espacios comerciales limpian sus baños por horario fijo, sin importar el tráfico real ni la calidad del aire. El resultado es el peor de los dos mundos: intervenciones innecesarias y baños sucios cuando más importa.',
+    howOver: 'Cómo funciona', howH2: 'Tres capas.
+Un sistema inteligente.',
+    certOver: 'Certificación Aiwanago', certH2: 'El primer score de higiene basado en datos reales.',
+    certBody: 'No en inspecciones visuales subjetivas. No en horarios fijos. En sensores que miden lo que realmente importa, 24 horas al día.',
+    implOver: 'Implementación', implH2: 'Instalación simple.
+Resultados desde
+el día uno.',
+    implBody: 'Instalamos los sensores, configuramos el sistema y operamos el monitoreo completo. En 60 días tenés datos reales para medir el impacto en tu operación.',
+    ctaOver: 'Empezá hoy', ctaH2: 'Hablemos de tu espacio',
+    ctaBody: 'Contanos sobre tu operación y analizamos juntos cómo Aiwanago puede transformar la gestión de higiene de tu espacio comercial.',
+    ctaBtn: 'Escribinos →', ctaNote: 'Espacios comerciales · Estadios · Aeropuertos · Hospitales · Oficinas',
+  },
+  en: {
+    badge: 'IoT · Hygiene Intelligence Platform',
+    h1a: 'Bathrooms that', h1b: 'manage', h1c: 'themselves.',
+    sub: 'Real-time sensors, automated staff alerts, and a certified hygiene score. We turn reactive cleaning into an intelligent system.',
+    cta1: 'Request a demo →', cta2: 'See how it works ↓',
+    stat1v: '6',   stat1l: 'real-time metrics',
+    stat2v: '24',  stat2l: 'continuous monitoring',
+    stat3v: '60',  stat3l: 'days of operation data',
+    stat4v: '3',   stat4l: 'certification levels',
+    navCta: 'Request a demo →', langBtn: 'ES',
+    probOver: 'The problem', probH2: 'Reactive cleaning is no longer enough',
+    probBody: 'Commercial spaces clean their bathrooms on fixed schedules, regardless of actual traffic or air quality. The result is the worst of both worlds: unnecessary interventions and dirty bathrooms when it matters most.',
+    howOver: 'How it works', howH2: 'Three layers.
+One intelligent system.',
+    certOver: 'Aiwanago Certification', certH2: 'The first hygiene score based on real sensor data.',
+    certBody: 'Not subjective visual inspections. Not fixed schedules. Sensors that measure what truly matters, 24 hours a day.',
+    implOver: 'Implementation', implH2: 'Simple setup.
+Results from
+day one.',
+    implBody: 'We install the sensors, configure the system, and run the complete monitoring operation. In 60 days you have real data to measure operational impact.',
+    ctaOver: 'Get started', ctaH2: 'Let's talk about your space',
+    ctaBody: 'Tell us about your operation and we'll analyze together how Aiwanago can transform hygiene management in your commercial space.',
+    ctaBtn: 'Contact us →', ctaNote: 'Shopping centers · Stadiums · Airports · Hospitals · Offices',
+  }
+};
+
+let currentLang = 'es';
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang(currentLang);
+}
+
+function applyLang(lang) {
+  const c = COPY[lang];
+  const $ = id => document.getElementById(id);
+  const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+  const setHTML = (id, val) => { const el = $(id); if (el) el.innerHTML = val; };
+
+  // Lang button
+  set('lang-btn', c.langBtn);
+  document.documentElement.lang = lang;
+
+  // Badge
+  const badge = document.querySelector('.badge-text');
+  if (badge) badge.textContent = c.badge;
+
+  // Hero h1
+  const h1 = document.querySelector('h1');
+  if (h1) h1.innerHTML = `${c.h1a}<br>${c.h1b}<br><em>${c.h1c}</em>`;
+
+  // Hero sub
+  const sub = document.querySelector('.hero-sub');
+  if (sub) sub.textContent = c.sub;
+
+  // Hero action buttons
+  const btns = document.querySelectorAll('.hero-actions a');
+  if (btns[0]) btns[0].textContent = c.cta1;
+  if (btns[1]) btns[1].textContent = c.cta2;
+
+  // Hero stats
+  const statVals = document.querySelectorAll('.stat-val');
+  const statLbls = document.querySelectorAll('.stat-lbl');
+  const stats = [
+    [c.stat1v, c.stat1l], [c.stat2v, c.stat2l],
+    [c.stat3v, c.stat3l], [c.stat4v, c.stat4l]
+  ];
+  stats.forEach(([v,l], i) => {
+    if (statVals[i]) statVals[i].innerHTML = v + (i===1 ? '<span>/7</span>' : '');
+    if (statLbls[i]) statLbls[i].textContent = l;
+  });
+
+  // Nav CTA
+  set('nav-cta', c.navCta);
+
+  // Section overlines + headings (use data-key approach)
+  const overlines = document.querySelectorAll('.overline');
+  const keys = ['probOver','howOver','certOver','implOver','ctaOver'];
+  overlines.forEach((el, i) => { if (keys[i] && c[keys[i]]) el.textContent = c[keys[i]]; });
+
+  // Section h2s
+  const h2s = document.querySelectorAll('section h2');
+  const h2keys = ['probH2','howH2','certH2','implH2','ctaH2'];
+  h2s.forEach((el, i) => { if (h2keys[i] && c[h2keys[i]]) el.innerHTML = c[h2keys[i]].replace(/\n/g,'<br>'); });
+
+  // Section bodies
+  const bodies = document.querySelectorAll('.section-body, .cta-body');
+  const bodyKeys = ['probBody','certBody','implBody','ctaBody'];
+  bodies.forEach((el, i) => { if (bodyKeys[i] && c[bodyKeys[i]]) el.textContent = c[bodyKeys[i]]; });
+
+  // CTA btn + note
+  set('cta-btn', c.ctaBtn);
+  set('cta-note', c.ctaNote);
+
+  // Panel detail label
+  const panelDetail = document.getElementById('panel-detail');
+  if (panelDetail) panelDetail.innerHTML = lang === 'en'
+    ? 'Main bathroom<br>Last cleaned: 1h 45min ago<br>Sensor: AirGradient ONE'
+    : 'Baño principal<br>Última limpieza: hace 1h 45min<br>Sensor: AirGradient ONE';
+
+  // Panel alert
+  const alert = document.querySelector('.panel-alert div');
+  if (alert) alert.textContent = lang === 'en'
+    ? 'Elevated VOC for 8 min · WhatsApp sent to staff'
+    : 'VOC elevado por 8 min · WhatsApp enviado al personal';
+
+  // OG tags (for sharing)
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDesc = document.querySelector('meta[property="og:description"]');
+  if (lang === 'en') {
+    if (ogTitle) ogTitle.content = 'Aiwanago — Bathrooms that manage themselves';
+    if (ogDesc) ogDesc.content = 'Real-time sensors, automated alerts, and a certified hygiene score for commercial spaces.';
+  } else {
+    if (ogTitle) ogTitle.content = 'Aiwanago — Baños que se gestionan solos';
+    if (ogDesc) ogDesc.content = 'Sensores en tiempo real, alertas automáticas y un score de higiene certificado para espacios comerciales.';
+  }
+}
+
 </script>
 </body>
 </html>
