@@ -26,10 +26,10 @@ body::before{content:'';position:fixed;inset:0;background-image:repeating-linear
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 56px;height:68px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
 nav.sc{background:rgba(7,16,14,.95);backdrop-filter:blur(12px);border-color:var(--br)}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.lm{width:32px;height:32px;background:var(--v);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.lm svg{width:16px;height:16px;fill:#fff}
+
+
 .ln{font-weight:900;font-size:18px;color:#fff;letter-spacing:-.5px}
-.nl{display:flex;align-items:center;gap:28px;list-style:none}
+.nl{display:flex;align-items:center;gap:24px;list-style:none;flex-wrap:nowrap}
 .nl a{font-size:13px;font-weight:400;color:var(--mu);text-decoration:none;transition:color .2s}
 .nl a:hover{color:var(--tx)}
 .nc{font-weight:700!important;font-size:13px!important;color:#fff!important;background:var(--v);padding:9px 22px;border-radius:8px;text-decoration:none;transition:opacity .2s!important}
@@ -190,15 +190,92 @@ footer{border-top:1px solid var(--br2);padding:32px 56px;display:flex;align-item
 .flink{font-size:12px;color:var(--fa);text-decoration:none;transition:color .2s}.flink:hover{color:var(--mu)}
 @keyframes fu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .hb{animation:fu .6s ease both}h1{animation:fu .6s .1s ease both}.hs{animation:fu .6s .2s ease both}.ha{animation:fu .6s .3s ease both}.hst{animation:fu .6s .4s ease both}.hp{animation:fu .7s .25s ease both}
-@media(max-width:1100px){.hi{grid-template-columns:1fr}.hp{display:none}.pg,.scg,.ig{grid-template-columns:1fr;gap:40px}.dsi{grid-template-columns:1fr 1fr}.vg{grid-template-columns:1fr 1fr}}
-@media(max-width:900px){nav{padding:0 24px}.hero{padding:100px 24px 64px}.sec{padding:72px 24px}.ds{padding:32px 24px}footer{padding:24px;flex-direction:column;gap:16px;text-align:center}.steps{grid-template-columns:1fr}.segg{grid-template-columns:1fr}.rg{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.hst{gap:20px;flex-wrap:wrap}.vg{grid-template-columns:1fr}.dsi{grid-template-columns:1fr 1fr}}
-@media(max-width:480px){h1{letter-spacing:-1.5px}.kpis{grid-template-columns:1fr}.fr{display:none}.dsi{grid-template-columns:1fr}}
+/* ── TABLET ── */
+@media(max-width:1100px){
+  .hi{grid-template-columns:1fr}
+  .hp{display:none}
+  .pg,.scg,.ig{grid-template-columns:1fr;gap:48px}
+  .dsi{grid-template-columns:1fr 1fr}
+  .vg{grid-template-columns:1fr 1fr}
+  .segg{grid-template-columns:1fr 1fr}
+}
+/* ── MOBILE ── */
+@media(max-width:900px){
+  nav{padding:0 20px;height:60px}
+  /* Hide all nav links except CTA on mobile */
+  .nl li:not(:nth-last-child(1)):not(:nth-last-child(2)){display:none}
+  .nc{padding:7px 16px;font-size:12px!important}
+  .lb{padding:5px 10px;font-size:10px}
+  .hero{padding:90px 20px 60px;min-height:auto}
+  .hi{grid-template-columns:1fr;gap:0}
+  .hp{display:none}
+  h1{font-size:clamp(34px,9vw,52px);letter-spacing:-1.5px}
+  .hs{font-size:15px;max-width:100%}
+  .hst{gap:16px;flex-wrap:wrap;margin-top:40px;padding-top:32px}
+  .sv{font-size:24px}
+  .sl{font-size:11px}
+  .sec{padding:60px 20px}
+  .ds{padding:28px 20px}
+  .dsi{grid-template-columns:1fr 1fr;gap:0}
+  .di{padding:20px;border-bottom:1px solid var(--br2)}
+  .di:nth-child(odd){border-right:1px solid var(--br2)}
+  .di:nth-child(even){border-right:none}
+  .dn{font-size:32px}
+  .pg{grid-template-columns:1fr;gap:36px}
+  .cc{padding:20px}
+  .ch{font-size:10px}
+  .cr{font-size:11px;gap:8px}
+  .cb,.cg{font-size:10px}
+  .steps{grid-template-columns:1fr}
+  .segg{grid-template-columns:1fr}
+  .seg{padding:20px}
+  .scg{grid-template-columns:1fr;gap:36px}
+  .bsc{font-size:72px}
+  .rg{grid-template-columns:1fr}
+  .ig{grid-template-columns:1fr;gap:36px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .vg{grid-template-columns:1fr 1fr}
+  .hst{gap:16px}
+  footer{padding:20px;flex-direction:column;gap:12px;text-align:center}
+  .ctai{padding:0 4px}
+}
+/* ── SMALL MOBILE ── */
+@media(max-width:480px){
+  h1{font-size:clamp(30px,10vw,42px);letter-spacing:-1px}
+  .hs{font-size:14px}
+  .hst{gap:12px}
+  .sv{font-size:22px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .vg{grid-template-columns:1fr}
+  .segg{grid-template-columns:1fr}
+  .fr{display:none}
+  .dsi{grid-template-columns:1fr}
+  .di{border-right:none!important}
+  .cc{overflow-x:auto}
+  .ch,.cr{min-width:480px}
+  .ha{flex-direction:column;align-items:flex-start;gap:12px}
+  .bp1{width:100%;justify-content:center}
+  .seg{flex-direction:column;gap:12px}
+  .rev{padding:20px}
+  .svis{padding:28px 20px}
+  .bsc{font-size:64px}
+}
 </style>
 </head>
 <body>
 
 <nav id="nav">
-  <a href="#" class="logo"><div class="lm"><svg viewBox="0 0 16 16"><path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z"/></svg></div><span class="ln">aiwanago</span></a>
+  <a href="#" class="logo">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Celeste half (left) -->
+      <path d="M18 4C18 4 9 14 9 22C9 27.523 13.477 32 19 32C19 32 18 4 18 4Z" fill="#6dccdf"/>
+      <!-- Verde half (right) -->
+      <path d="M18 4C18 4 27 14 27 22C27 27.523 22.523 32 17 32C17 32 18 4 18 4Z" fill="#12b796"/>
+      <!-- Highlight teardrop inner -->
+      <path d="M18 10C18 10 13 18 13 23C13 25.5 14.8 27.5 17 28C15.5 24 16 18 18 10Z" fill="rgba(255,255,255,0.18)"/>
+    </svg>
+    <span class="ln">aiwanago</span>
+  </a>
   <ul class="nl">
     <li><a href="#como-funciona" id="n1">Cómo funciona</a></li>
     <li><a href="#segmentos" id="n2">Sectores</a></li>
@@ -273,7 +350,7 @@ footer{border-top:1px solid var(--br2);padding:32px 56px;display:flex;align-item
         </ul>
       </div>
       <div>
-        <div class="cc">
+        <div class="cc"><div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
           <div class="ch"><div class="chl" id="ch1">Indicador</div><div class="chl" id="ch2">Sin Aiwanago</div><div class="chl g" id="ch3">Con Aiwanago</div></div>
           <div class="cr"><span class="cm" id="cr1">Limpiezas innecesarias</span><span class="cb" id="cv1">15–25% del total</span><span class="cg" id="cg1">Solo cuando hace falta</span></div>
           <div class="cr"><span class="cm" id="cr2">Tiempo de respuesta</span><span class="cb" id="cv2">Sin control</span><span class="cg" id="cg2">&lt; 30 minutos</span></div>
@@ -281,7 +358,7 @@ footer{border-top:1px solid var(--br2);padding:32px 56px;display:flex;align-item
           <div class="cr"><span class="cm" id="cr4">Calidad de aire</span><span class="cb" id="cv4">No monitoreada</span><span class="cg" id="cg4">Alertas en tiempo real</span></div>
           <div class="cr"><span class="cm" id="cr5">Reporte a dirección</span><span class="cb" id="cv5">Manual / mensual</span><span class="cg" id="cg5">Dashboard 24/7</span></div>
           <div class="cr"><span class="cm" id="cr6">Score de higiene</span><span class="cb" id="cv6">Inexistente</span><span class="cg" id="cg6">Bronze / Silver / Gold</span></div>
-        </div>
+        </div></div>
       </div>
     </div>
   </div>
@@ -415,7 +492,13 @@ footer{border-top:1px solid var(--br2);padding:32px 56px;display:flex;align-item
 </section>
 
 <footer>
-  <div class="fl">aiwanago</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+      <path d="M18 4C18 4 9 14 9 22C9 27.523 13.477 32 19 32C19 32 18 4 18 4Z" fill="#6dccdf"/>
+      <path d="M18 4C18 4 27 14 27 22C27 27.523 22.523 32 17 32C17 32 18 4 18 4Z" fill="#12b796"/>
+    </svg>
+    <span class="fl">aiwanago</span>
+  </div>
   <div class="fr">
     <a href="#como-funciona" class="flink" id="f1">Cómo funciona</a>
     <a href="#certificacion" class="flink" id="f2">Score</a>
